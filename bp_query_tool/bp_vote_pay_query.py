@@ -75,8 +75,6 @@ def get_unclaim_pay():
     un_claim_pay = 0
     if diff > useconds_per_day:
         un_claim_pay = bp_vote_pay+bp_block_pay
-    else:
-        un_claim_pay = 0
     print "unclaim_pay:",un_claim_pay
 
 def get_block_pay():
