@@ -7,6 +7,8 @@ import json
 import sys
 import time
 
+useconds_per_day = 24 * 3600 * 1000000
+
 def usage():
     global bpname, api_url
     parser = argparse.ArgumentParser(description='BP Rewards Query Tool.')
@@ -16,15 +18,17 @@ def usage():
     bpname, api_url = args.name, args.url
 
 def get_vote_weight():
-    global bp_vote_weight, unpaid_blocks
+    global bp_vote_weight, unpaid_blocks, last_claim_time
     bp_vote_weight = None
     unpaid_blocks = 0
+    last_claim_time = 0
     producers_url = api_url+"/v1/chain/get_table_rows"
     response = requests.post(producers_url, data='{"scope":"eosio","table":"producers","json":true,"code":"eosio","limit":10000}')
     for data in response.json()['rows']:
         if data['owner'] == bpname:
             bp_vote_weight = float(data['total_votes'])
             unpaid_blocks = int(data['unpaid_blocks'])
+            last_claim_time = int(data['last_claim_time'])
     if bp_vote_weight == None:
         print("%s not found." % (bpname))
         sys.exit()
@@ -47,6 +51,16 @@ def get_vote_pay():
     bp_vote_pay = pervote_bucket*bp_vote_weight/total_producer_vote_weight/10000
     print "bp_vote_pay:",bp_vote_pay
 
+def get_unclaim_pay():
+    ct = int(time.time() * 1000000)
+    diff = ct - last_claim_time
+    un_claim_pay = 0
+    if diff > useconds_per_day:
+        un_claim_pay = bp_vote_pay+bp_block_pay
+    else:
+        un_claim_pay = 0
+    print "unclaim_pay:",un_claim_pay
+
 def get_block_pay():
     global bp_block_pay
     print("execute(pervote_bucket*prod.unpaid_blocks/total_unpaid_blocks): %s*%s/%s/10000" % (pervote_bucket,unpaid_blocks,total_unpaid_blocks))
@@ -58,3 +72,4 @@ if __name__ == '__main__':
     get_vote_pay()
     get_block_pay()
     print 'bp_all_pay:', (bp_vote_pay+bp_block_pay)
+    get_unclaim_pay()
