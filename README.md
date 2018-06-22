@@ -5,3 +5,8 @@ toolkit for EOSIO
 ```
 python bp_vote_pay_query.py -n eosantpoolbp -u http://127.0.0.1:8888
 ```
+
+### bp_info query
+```
+python producer_query.py -n eosantpoolbp -u http://127.0.0.1:8888
+```

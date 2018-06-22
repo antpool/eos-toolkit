@@ -6,7 +6,7 @@ import argparse
 
 def usage():
     global bpname, api_url
-    parser = argparse.ArgumentParser(description='BP Rewards Query Tool.')
+    parser = argparse.ArgumentParser(description='BP Query Tool.')
     parser.add_argument('-u', '--url', required=True, help='eos api')
     parser.add_argument('-n', '--name', required=True, help='bp name')
     args = parser.parse_args()
