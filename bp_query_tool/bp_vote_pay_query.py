@@ -52,7 +52,7 @@ def get_issue_token():
     response = requests.post(url, data='{"symbol":"EOS","code":"eosio.token"}')
     supply = float(response.json()['EOS']['supply'][:-4])
     usecs_since_last_fill = ct - last_pervote_bucket_fill
-    new_tokens = continuous_rate*supply*useconds_per_day/useconds_per_year
+    new_tokens = continuous_rate*supply*usecs_since_last_fill/useconds_per_year
     to_producers = new_tokens / 5;
     to_per_block_pay = to_producers / 4;
     to_per_vote_pay = to_producers - to_per_block_pay;
