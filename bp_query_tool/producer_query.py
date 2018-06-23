@@ -36,6 +36,7 @@ def get_producer_info():
     print 'bpname:',bpname
     print '#:',i
     print 'vote_weight:',int(bp_vote_weight)
+    print 'votes_eos:',int(bp_vote_weight)/3757023949
     print '%:',(bp_vote_weight/total_producer_vote_weight)
 
 if __name__ == '__main__':

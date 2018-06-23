@@ -75,6 +75,9 @@ def get_unclaim_pay():
     un_claim_pay = 0
     if diff > useconds_per_day:
         un_claim_pay = bp_vote_pay+bp_block_pay
+    timestamp_sec = last_claim_time/1000000
+    last_claim_time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestamp_sec))
+    print "last_claim_time:", last_claim_time_str
     print "unclaim_pay:",un_claim_pay
 
 def get_block_pay():
