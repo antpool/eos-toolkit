@@ -10,3 +10,8 @@ python bp_vote_pay_query.py -n eosantpoolbp -u http://127.0.0.1:8888
 ```
 python producer_query.py -n eosantpoolbp -u http://127.0.0.1:8888
 ```
+
+### node status monitor
+```
+python node_monitor.py -u http://127.0.0.1:8888 -d 5
+```

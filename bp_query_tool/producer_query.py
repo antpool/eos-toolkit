@@ -3,6 +3,7 @@
 
 import requests
 import argparse
+import sys
 
 def usage():
     global bpname, api_url
@@ -23,7 +24,7 @@ def get_producer_info():
     get_global_info()
     bp_vote_weight = None
     producers_url = api_url+"/v1/chain/get_producers"
-    response = requests.post(producers_url, data='{"json":true,"limit":60}')
+    response = requests.post(producers_url, data='{"json":true,"limit":600}')
     i = 1
     for data in response.json()['rows']:
         if data['owner'] == bpname:
@@ -36,6 +37,7 @@ def get_producer_info():
     print 'bpname:',bpname
     print '#:',i
     print 'vote_weight:',int(bp_vote_weight)
+    print 'votes_eos:',int(bp_vote_weight)/3757023949
     print '%:',(bp_vote_weight/total_producer_vote_weight)
 
 if __name__ == '__main__':
