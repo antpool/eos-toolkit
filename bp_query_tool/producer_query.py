@@ -4,6 +4,7 @@
 import requests
 import argparse
 import sys
+import time
 
 def usage():
     global bpname, api_url
@@ -34,11 +35,16 @@ def get_producer_info():
     if bp_vote_weight == None:
         print("%s not found." % (bpname))
         sys.exit()
-    print 'bpname:',bpname
-    print '#:',i
-    print 'vote_weight:',int(bp_vote_weight)
-    print 'votes_eos:',int(bp_vote_weight)/3757023949
-    print '%:',(bp_vote_weight/total_producer_vote_weight)
+    print 'bp_name :',bpname
+    print 'bp_index:',i
+    print 'weight  :',int(bp_vote_weight)
+    print 'vote_eos:', votes2eos(bp_vote_weight)
+    print 'percent :',(bp_vote_weight/total_producer_vote_weight)
+
+def votes2eos(votes):
+    date = (int(time.time()) - (946684800000 / 1000))
+    weight = float(date / (24 * 3600 * 7)) / float(52)
+    return (float(votes) / pow(2, weight)) / 10000
 
 if __name__ == '__main__':
     usage()
