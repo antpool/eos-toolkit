@@ -44,11 +44,21 @@ class Monitor:
         self.__log.info("%s %s" % (self.__pid, cpu_usage))
         # add metric collector
 
+    def connections(self):
+        connections = psutil.net_connections('tcp')
+        connection_count = 0
+        for sconn in connections:
+            if self.__pid == sconn.pid:
+                connection_count = connection_count + 1
+        self.__log.info("%s %s" % (self.__pid, connection_count))
+        # add metric collector
+
     def monitor(self):
         try:
             self.init_process()
             self.cpu()
             self.ram()
+            self.connections()
         except Exception as e:
             self.__log.error(str(e))
 
