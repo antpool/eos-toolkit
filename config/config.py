@@ -22,7 +22,12 @@ class Config:
 
     @staticmethod
     def get_api_list():
-        return cf.get("eos", "remote_api_list").split(',')
+        remote_api_list = []
+        api_list = cf.get("eos", "remote_api_list").split(',')
+        for api in api_list:
+            if api != "":
+                remote_api_list.append(api)
+        return remote_api_list
 
     @staticmethod
     def get_local_api():
