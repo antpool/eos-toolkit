@@ -8,17 +8,34 @@ if not os.path.isdir(log_path):
     os.makedirs(log_path)
 log_file = log_path + "/" + LogConfig.get_monitor_log()
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s %(levelname)s %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    filename=log_file,
-    filemode='a')
+level = logging.INFO
+simple_format = '%(asctime)s %(levelname)s %(message)s'
+date_format = '%Y-%m-%d %H:%M:%S'
+formatter = logging.Formatter(simple_format, date_format)
+
+logger = logging.getLogger(log_file)
+logger.setLevel(level)
+
+file_enable = LogConfig.file_enable()
+console_enable = LogConfig.console_enable()
+log_enable = file_enable or console_enable
+if not log_enable:
+    logger.disabled = 1
+
+if file_enable:
+    fileHandler = logging.FileHandler(log_file)
+    fileHandler.setFormatter(formatter)
+    logger.addHandler(fileHandler)
+
+if console_enable:
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setFormatter(formatter)
+    logger.addHandler(consoleHandler)
 
 
 def info(message):
-    logging.info(message)
+    logger.info(message)
 
 
 def error(message):
-    logging.error(message)
+    logger.error(message)
