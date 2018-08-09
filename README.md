@@ -11,12 +11,36 @@ python bp_vote_pay_query.py -n eosantpoolbp -u http://127.0.0.1:8888
 python producer_query.py -n eosantpoolbp -u http://127.0.0.1:8888
 ```
 
-### node status monitor
-```
-python node_monitor.py -u http://127.0.0.1:8888 -d 5
-```
+### configuration
 
-### node cpu&ram monitor
 ```
-python cpu_ram_monitor.py -p 1234 -l /tmp/cpu_ram_monitor.log
+config/config.conf
+[eos]
+process_name    = nodeos                     # node process name to get pid
+remote_api_list = http://api.bp.antpool.com, # external api list for height check
+local_api       = http://127.0.0.1:8888      # local api
+max_height_diff = 5                          # max diff for alarm
+
+[logger]
+log_home         = default                   # default is /path/eos-toolkit/logs
+monitor_log_file = monitor.log
+
+utils/notify.py
+add own slack/sms/email...
+
+utils/metric.py
+add own metric collector
+
+```
+### node monitor run
+```
+1.cpu/ram/connecitons monitor
+python eos_process_monitor.py
+
+2.node alive/height check
+python node_monitor.py
+
+use crontab
+*/1 * * * * python /path/eos_process_monitor.py
+*/5 * * * * python /path/node_monitor.py
 ```
