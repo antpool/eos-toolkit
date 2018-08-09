@@ -25,12 +25,11 @@ max_height_diff = 5                          # max diff for alarm
 log_home         = default                   # default is /path/eos-toolkit/logs
 monitor_log_file = monitor.log
 
+utils/notify.py
+add own slack/sms/email...
 
-notify
-add own slack/sms/email... to utils/notify.py
-
-metric
-add own metric collector to utils/metric.py
+utils/metric.py
+add own metric collector
 
 ```
 ### node monitor run
