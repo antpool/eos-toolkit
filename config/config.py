@@ -8,10 +8,6 @@ cf.read(config_home + "/config.conf")
 
 
 class Config:
-
-    def __init__(self):
-        pass
-
     @staticmethod
     def get_work_home():
         return work_home
@@ -37,6 +33,7 @@ class Config:
     def get_max_height_diff():
         return cf.get("eos", "max_height_diff")
 
+class LogConfig:
     @staticmethod
     def get_log_path():
         log_home = cf.get("logger", "log_home")
@@ -47,3 +44,25 @@ class Config:
     @staticmethod
     def get_monitor_log():
         return cf.get("logger", "monitor_log_file")
+
+
+class NotifyConfig:
+    @staticmethod
+    def get_beary_chat_id():
+        return cf.get("notify", "beary_chat_id")
+
+    @staticmethod
+    def get_beary_token():
+        return cf.get("notify", "beary_token")
+
+    @staticmethod
+    def get_ding_talk_token():
+        return cf.get("notify", "ding_talk_token")
+
+    @staticmethod
+    def get_telegram_token():
+        return cf.get("notify", "telegram_token")
+
+    @staticmethod
+    def get_telegram_chat_id():
+        return cf.get("notify", "telegram_chat_id")
