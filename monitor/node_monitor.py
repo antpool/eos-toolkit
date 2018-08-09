@@ -16,8 +16,8 @@ from utils.metric import Metric
 from config.config import Config
 from utils import logger
 
-other_api_list = Config.get_api_list()
-other_api_size = len(other_api_list)
+remote_api_list = Config.get_api_list()
+other_api_size = len(remote_api_list)
 http_time_out_sec = 2.0 / (other_api_size + 2)
 
 
@@ -42,11 +42,11 @@ def notify(msg):
 
 def get_chain_info_from_other():
     index = random.randint(0, other_api_size - 1)
-    url = other_api_list[index]
+    url = remote_api_list[index]
     success, chain_info = get_chain_info_from_node(url)
     if success:
         return chain_info, url
-    for url in other_api_list:
+    for url in remote_api_list:
         success, chain_info = get_chain_info_from_node(url)
         if success:
             break

@@ -17,7 +17,7 @@ python producer_query.py -n eosantpoolbp -u http://127.0.0.1:8888
 config/config.conf
 [eos]
 process_name    = nodeos                     # node process name to get pid
-other_api_list  = http://api.bp.antpool.com, # external api list for height check
+remote_api_list = http://api.bp.antpool.com, # external api list for height check
 local_api       = http://127.0.0.1:8888      # local api
 max_height_diff = 5                          # max diff for alarm
 
