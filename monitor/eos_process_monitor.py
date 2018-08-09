@@ -70,7 +70,7 @@ def usage():
     global pname
     default_name = Config.get_process_name()
     parser = argparse.ArgumentParser(description='process cpu/ram/connections monitor tool.')
-    parser.add_argument('-n', '--pname', default=default_name, help='process pid')
+    parser.add_argument('-n', '--pname', default=default_name, help='process name')
     args = parser.parse_args()
     pname = args.pname
 
