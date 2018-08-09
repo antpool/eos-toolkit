@@ -37,7 +37,7 @@ def diff_record_or_warning(local_block_num, remote_block_num, other_api):
 
 
 def notify(msg):
-    Notify.notify(msg, 'alarm')
+    Notify.notify(msg)
 
 
 def get_chain_info_from_other():

@@ -1,12 +1,12 @@
 import logging
 import os
 
-from config.config import Config
+from config.config import LogConfig
 
-log_path = Config.get_log_path()
+log_path = LogConfig.get_log_path()
 if not os.path.isdir(log_path):
     os.makedirs(log_path)
-log_file = log_path + "/" + Config.get_monitor_log()
+log_file = log_path + "/" + LogConfig.get_monitor_log()
 
 logging.basicConfig(
     level=logging.INFO,

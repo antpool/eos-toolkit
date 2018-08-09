@@ -25,6 +25,14 @@ max_height_diff = 5                          # max diff for alarm
 log_home         = default                   # default is /path/eos-toolkit/logs
 monitor_log_file = monitor.log
 
+# add own info or add other notify tools like slack/sms/email...
+[notify]
+beary_chat_id    =
+beary_token      =
+ding_talk_token  =
+telegram_chat_id =
+telegram_token   =
+
 utils/notify.py
 add own slack/sms/email...
 
