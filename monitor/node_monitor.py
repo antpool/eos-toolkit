@@ -14,30 +14,25 @@ init_work_home.init()
 from utils.notify import Notify
 from utils.metric import Metric
 from config.config import Config
-from utils import logger
+from utils.logger import logger
 
 remote_api_list = Config.get_api_list()
 remote_api_size = len(remote_api_list)
 http_time_out_sec = 2.0 / (remote_api_size + 2)
+hostname = '【%s】' % socket.gethostname()
 
 
-def log_and_notify(msg):
-    msg = ('【%s】\n%s' % (socket.gethostname(), msg))
-    logger.info(msg)
-    notify(msg)
+def log_and_notify(*args):
+    Notify.notify(*args)
 
 
 def diff_record_or_warning(local_block_num, remote_block_num, other_api):
     diff = remote_block_num - local_block_num
     msg = ("local:%s,remote(%s):%s,diff:%s" % (local_block_num, other_api, remote_block_num, diff))
-    logger.info(msg)
-    Metric.metric("eosHeight", diff)
+    logger.info('%s, %s', hostname, msg)
+    Metric.metric(Metric.height_diff, diff)
     if abs(diff) >= max_height_diff:
-        log_and_notify(msg)
-
-
-def notify(msg):
-    Notify.notify(msg)
+        log_and_notify(hostname, msg)
 
 
 def get_chain_info_from_other():
@@ -65,7 +60,7 @@ def get_chain_info_from_node(url, time_out_sec=http_time_out_sec):
     except BaseException as e:
         msg = str(e)
     if not success:
-        logger.error('Failed to call %s error:%s' % (url, msg))
+        logger.error('Failed to call %s error:%s', url, msg)
     return success, msg
 
 
@@ -90,7 +85,7 @@ def check_height():
 def check_node_alive(url):
     is_alive, msg = get_chain_info_from_node(url)
     if not is_alive:
-        log_and_notify('node is need check\n%s' % (msg))
+        log_and_notify(hostname, 'node is need check', msg)
         return False
     return True
 
@@ -113,7 +108,7 @@ def main():
             return
         check_height()
     except BaseException as e:
-        logger.error("check fail:%s" % str(e))
+        logger.error("check fail:%s", e)
 
 
 if __name__ == '__main__':
