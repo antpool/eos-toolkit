@@ -1,21 +1,17 @@
 # eos-toolkit
 toolkit for EOSIO
 
-### bp_vote_pay query
+### Environment
 ```
-python bp_vote_pay_query.py -n eosantpoolbp -u http://127.0.0.1:8888
-```
-
-### bp_info query
-```
-python producer_query.py -n eosantpoolbp -u http://127.0.0.1:8888
+python 2.7
 ```
 
-### configuration
+### Configuration
 
 ```
 config/config.conf
 [eos]
+bp_account      = eosantpoolbp
 process_name    = nodeos                     # node process name to get pid
 remote_api_list = http://api.bp.antpool.com, # external api list for height check
 local_api       = http://127.0.0.1:8888      # local api
@@ -24,6 +20,8 @@ max_height_diff = 5                          # max diff for alarm
 [logger]
 log_home         = default                   # default is /path/eos-toolkit/logs
 monitor_log_file = monitor.log
+console_enable   = true
+file_enable      = true
 
 # add own info or add other notify tools like slack/sms/email...
 [notify]
@@ -32,23 +30,33 @@ beary_token      =
 ding_talk_token  =
 telegram_chat_id =
 telegram_token   =
+```
 
+### Notify
+```
 utils/notify.py
-add own slack/sms/email...
+e.g. sms/email...
+```
 
+### Metric
+```
 utils/metric.py
 add own metric collector
-
 ```
-### node monitor run
+
+### Run
 ```
-1.cpu/ram/connecitons monitor
-python eos_process_monitor.py
+1.cpu,ram,connecitons monitor
+python /path/eos_process_monitor.py
 
-2.node alive/height check
-python node_monitor.py
+2.node alive,height check
+python /path/node_monitor.py
 
-use crontab
+3.bp status monitor e.g. rank,votes,reward,claim_time
+pyton /path/bp_status_monitor.py
+
+crontab
 */1 * * * * python /path/eos_process_monitor.py
 */5 * * * * python /path/node_monitor.py
+*/10 * * * * python /path/bp_status_monitor.py
 ```

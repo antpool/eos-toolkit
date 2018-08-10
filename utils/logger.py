@@ -24,7 +24,7 @@ if not log_enable:
     logger.disabled = 1
 
 if file_enable:
-    fileHandler = TimedRotatingFileHandler(log_file, when='d')
+    fileHandler = TimedRotatingFileHandler(log_file, when='d', backupCount=7)
     fileHandler.setFormatter(formatter)
     logger.addHandler(fileHandler)
 
