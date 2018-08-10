@@ -23,7 +23,7 @@ monitor_log_file = monitor.log
 console_enable   = true
 file_enable      = true
 
-# add own info or add other notify tools like slack/sms/email...
+# add own info or add other notify tools slack/sms/email...
 [notify]
 beary_chat_id    =
 beary_token      =
@@ -35,13 +35,13 @@ telegram_token   =
 ### Notify
 ```
 utils/notify.py
-e.g. sms/email...
+add other tools e.g. sms/email...
 ```
 
 ### Metric
 ```
 utils/metric.py
-add own metric collector
+add metric collector
 ```
 
 ### Run
