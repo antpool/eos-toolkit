@@ -30,32 +30,14 @@ def notify(*args):
 def get_global_info():
     global total_producer_vote_weight, pervote_bucket, total_unpaid_blocks, perblock_bucket, last_pervote_bucket_fill
     global_url = url + "/v1/chain/get_table_rows"
-    response = requests.post(global_url, data='{"scope":"eosio","table":"global","json":true,"code":"eosio","limit":1}')
+    response = requests.post(global_url, data='{"scope":"eosio","table":"global","json":true,"code":"eosio","limit":1}',
+                             timeout=3.0)
     global_data = response.json()['rows'][0]
     total_producer_vote_weight = float(global_data['total_producer_vote_weight'])
     pervote_bucket = int(global_data['pervote_bucket'])
     perblock_bucket = int(global_data['perblock_bucket'])
     total_unpaid_blocks = int(global_data['total_unpaid_blocks'])
     last_pervote_bucket_fill = int(global_data['last_pervote_bucket_fill'])
-
-
-def get_vote_weight():
-    global bp_vote_weight, unpaid_blocks, last_claim_time
-    bp_vote_weight = None
-    unpaid_blocks = 0
-    last_claim_time = 0
-    producers_url = api_url + "/v1/chain/get_table_rows"
-    response = requests.post(producers_url,
-                             data='{"scope":"eosio","table":"producers","json":true,"code":"eosio","limit":1000}')
-    for data in response.json()['rows']:
-        if data['owner'] == bpname:
-            bp_vote_weight = float(data['total_votes'])
-            unpaid_blocks = int(data['unpaid_blocks'])
-            last_claim_time = int(data['last_claim_time'])
-    if bp_vote_weight == None:
-        msg = "%s not found." % (bpname)
-        logger.info(msg)
-        raise Exception(msg)
 
 
 def get_issue_token():
@@ -75,10 +57,8 @@ def get_issue_token():
 def get_vote_pay():
     global bp_vote_pay, ct
     ct = int(time.time() * 1000000)
-    get_vote_weight()
     get_global_info()
     get_issue_token()
-    # print("execute(pervote_bucket*prod.total_votes/total_producer_vote_weight): %s*%s/%s/10000" % (pervote_bucket,bp_vote_weight,total_producer_vote_weight))
     bp_vote_pay = pervote_bucket * bp_vote_weight / total_producer_vote_weight / 10000
 
 
@@ -89,12 +69,11 @@ def get_unclaim_pay():
     if diff > useconds_per_day:
         un_claim_pay = bp_vote_pay + bp_block_pay
     timestamp_sec = last_claim_time / 1000000
-    last_claim_time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestamp_sec))
+    last_claim_time_str = time.strftime("%F %T %Z", time.localtime(timestamp_sec))
 
 
 def get_block_pay():
     global bp_block_pay
-    # print("execute(perblock_bucket*prod.unpaid_blocks/total_unpaid_blocks): %s*%s/%s/10000" % (perblock_bucket,unpaid_blocks,total_unpaid_blocks))
     bp_block_pay = perblock_bucket * unpaid_blocks / total_unpaid_blocks / 10000
 
 
@@ -112,14 +91,17 @@ def get_rewards_info(bp, url):
 
 
 def get_producer_info(url, bp_name):
+    global bp_vote_weight, unpaid_blocks, last_claim_time
     get_global_info()
     bp_vote_weight = None
     producers_url = url + "/v1/chain/get_producers"
-    response = requests.post(producers_url, data='{"json":true,"limit":600}')
+    response = requests.post(producers_url, data='{"json":true,"limit":600}', timeout=3.0)
     i = 1
     for data in response.json()['rows']:
         if data['owner'] == bp_name:
             bp_vote_weight = float(data['total_votes'])
+            unpaid_blocks = int(data['unpaid_blocks'])
+            last_claim_time = int(data['last_claim_time'])
             break
         i = i + 1
     if bp_vote_weight is None:
