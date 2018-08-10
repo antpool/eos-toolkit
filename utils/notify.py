@@ -1,7 +1,7 @@
 import requests
 
-import logger
 from config.config import NotifyConfig
+from logger import logger
 
 beary_chat_id = NotifyConfig.get_beary_chat_id()
 beary_token = NotifyConfig.get_beary_token()
@@ -12,12 +12,15 @@ telegram_token = NotifyConfig.get_telegram_token()
 
 class Notify:
     @staticmethod
-    def notify(msg):
+    def notify(msg, *args):
         # add other like slack, sms...
-        Notify.all_notify(msg)
+        Notify.all_notify(msg, *args)
 
     @staticmethod
-    def all_notify(msg):
+    def all_notify(msg, *args):
+        if args is not None and len(args) > 0:
+            for arg in args:
+                msg = msg + '\n' + arg
         Beary.beary_notify(msg, beary_chat_id, beary_token)
         DingTalk.ding_talk_notify(msg, ding_talk_token)
         Telegram.telegram_notify(msg, telegram_chat_id, telegram_token)
@@ -66,6 +69,6 @@ def post(notify_type, url, headers=def_headers, timeout=3.0, data=None, param=No
             response = requests.post(url, param, timeout=timeout)
         else:
             response = requests.post(url, data=data, headers=headers, timeout=timeout)
-        logger.info("%s: %s" % (notify_type, response.json()))
+        logger.info("%s: %s", notify_type, response.json())
     except Exception as e:
-        logger.error(notify_type + " notify exception:" + str(e))
+        logger.error("%s notify exception:%s", notify_type, e)

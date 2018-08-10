@@ -1,5 +1,6 @@
 import logging
 import os
+from logging.handlers import TimedRotatingFileHandler
 
 from config.config import LogConfig
 
@@ -23,7 +24,7 @@ if not log_enable:
     logger.disabled = 1
 
 if file_enable:
-    fileHandler = logging.FileHandler(log_file)
+    fileHandler = TimedRotatingFileHandler(log_file, when='d')
     fileHandler.setFormatter(formatter)
     logger.addHandler(fileHandler)
 
@@ -31,11 +32,3 @@ if console_enable:
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(formatter)
     logger.addHandler(consoleHandler)
-
-
-def info(message):
-    logger.info(message)
-
-
-def error(message):
-    logger.error(message)
