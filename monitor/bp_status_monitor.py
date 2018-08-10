@@ -4,8 +4,6 @@
 import argparse
 import time
 
-import requests
-
 import init_work_home
 
 init_work_home.init()
@@ -14,6 +12,7 @@ from config.config import Config
 from utils.logger import logger
 from utils.metric import Metric
 from utils.notify import Notify
+from utils import http
 
 continuous_rate = 0.0487
 useconds_per_day = 24 * 3600 * 1000000
@@ -30,8 +29,8 @@ def notify(*args):
 def get_global_info():
     global total_producer_vote_weight, pervote_bucket, total_unpaid_blocks, perblock_bucket, last_pervote_bucket_fill
     global_url = url + "/v1/chain/get_table_rows"
-    response = requests.post(global_url, data='{"scope":"eosio","table":"global","json":true,"code":"eosio","limit":1}',
-                             timeout=3.0)
+    response = http.post(global_url, global_url,
+                         data='{"scope":"eosio","table":"global","json":true,"code":"eosio","limit":1}')
     global_data = response.json()['rows'][0]
     total_producer_vote_weight = float(global_data['total_producer_vote_weight'])
     pervote_bucket = int(global_data['pervote_bucket'])
@@ -43,7 +42,7 @@ def get_global_info():
 def get_issue_token():
     global pervote_bucket, perblock_bucket
     url = api_url + "/v1/chain/get_currency_stats"
-    response = requests.post(url, data='{"symbol":"EOS","code":"eosio.token"}')
+    response = http.post(url, url, data='{"symbol":"EOS","code":"eosio.token"}')
     supply = float(response.json()['EOS']['supply'][:-4])
     usecs_since_last_fill = ct - last_pervote_bucket_fill
     new_tokens = continuous_rate * supply * usecs_since_last_fill / useconds_per_year
@@ -95,7 +94,7 @@ def get_producer_info(url, bp_name):
     get_global_info()
     bp_vote_weight = None
     producers_url = url + "/v1/chain/get_producers"
-    response = requests.post(producers_url, data='{"json":true,"limit":600}', timeout=3.0)
+    response = http.post(producers_url, producers_url, data='{"json":true,"limit":600}')
     i = 1
     for data in response.json()['rows']:
         if data['owner'] == bp_name:

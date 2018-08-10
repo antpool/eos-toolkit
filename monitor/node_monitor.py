@@ -2,11 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import json
 import random
 import socket
-
-import requests
 
 import init_work_home
 
@@ -15,6 +12,7 @@ from utils.notify import Notify
 from utils.metric import Metric
 from config.config import Config
 from utils.logger import logger
+from utils import http
 
 remote_api_list = Config.get_api_list()
 remote_api_size = len(remote_api_list)
@@ -52,11 +50,11 @@ def get_chain_info_from_node(url, time_out_sec=http_time_out_sec):
     success = False
     try:
         url = url + "/v1/chain/get_info"
-        result = requests.get(url, timeout=time_out_sec)
+        result = http.get(url, url, timeout=time_out_sec)
         msg = result.text
         if result.status_code == 200:
             success = True
-            msg = json.loads(result.text)
+            msg = result.json()
     except BaseException as e:
         msg = str(e)
     if not success:

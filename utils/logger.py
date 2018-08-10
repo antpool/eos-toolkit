@@ -10,7 +10,7 @@ if not os.path.isdir(log_path):
 log_file = log_path + "/" + LogConfig.get_monitor_log()
 
 level = logging.INFO
-simple_format = '%(asctime)s %(levelname)s %(message)s'
+simple_format = '%(asctime)s %(levelname)s %(filename)s(%(lineno)d) %(message)s'
 date_format = '%Y-%m-%d %H:%M:%S'
 formatter = logging.Formatter(simple_format, date_format)
 

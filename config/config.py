@@ -39,6 +39,15 @@ class Config:
     def get_bp_account():
         return cf.get(Config.section, "bp_account")
 
+    @staticmethod
+    def get_bidname_list():
+        bidname_list = []
+        name_list = cf.get(Config.section, "bidname_list").split(',')
+        for name in name_list:
+            if name != "":
+                bidname_list.append(name)
+        return bidname_list
+
 
 class LogConfig:
     section = "logger"
