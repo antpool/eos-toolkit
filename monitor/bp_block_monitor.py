@@ -40,8 +40,7 @@ def get_unpaid_block():
 def check_bp_produce():
     last_unpaid_blocks = 0
     last_date = time.time()
-    is_need_check = True
-    while is_need_check is True:
+    while True:
         unpaid_blocks = get_unpaid_block()
         if unpaid_blocks is None:
             log('not in top21')
@@ -49,7 +48,7 @@ def check_bp_produce():
         if unpaid_blocks != last_unpaid_blocks:
             if last_unpaid_blocks != 0:
                 log('produce check success')
-                is_need_check = False
+                break
             last_unpaid_blocks = unpaid_blocks
             last_date = time.time()
             time.sleep(1)

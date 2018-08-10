@@ -59,9 +59,13 @@ python /path/bp_status_monitor.py
 4.bidname status monitor
 python /path/bidname_status.py
 
+5.bp produce monitor
+python /path/bp_block_monitor.py
+
 crontab
 */1 * * * * python /path/eos_process_monitor.py
 */5 * * * * python /path/node_monitor.py
 */10 * * * * python /path/bp_status_monitor.py
 */30 * * * * python /path/bidname_status.py
+*/3 * * * * python /path/bp_block_monitor.py
 ```
