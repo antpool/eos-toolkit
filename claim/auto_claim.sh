@@ -111,7 +111,7 @@ check_claim_time() {
 }
 
 check_rewards() {
-    reward_pay=`${reward_tool} -d "rewards"`
+    reward_pay=`${reward_tool} -r "rewards"`
     if [ "${reward_pay}" == "" ]; then
         log "query reward error"
         exit 1
