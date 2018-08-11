@@ -3,3 +3,4 @@
 logs/
 *.log
 */logs/
+*/claim_cache_info
