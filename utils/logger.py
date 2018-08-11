@@ -1,5 +1,10 @@
+import argparse
 import logging
 import os
+
+import init_work_home
+
+init_work_home.init()
 from logging.handlers import TimedRotatingFileHandler
 
 from config.config import LogConfig
@@ -32,3 +37,17 @@ if console_enable:
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(formatter)
     logger.addHandler(consoleHandler)
+
+
+def usage():
+    global msg
+    parser = argparse.ArgumentParser(description='logger tool.')
+    parser.add_argument('-m', '--msg', default=None, help='log msg')
+    args = parser.parse_args()
+    msg = args.msg
+
+
+if __name__ == "__main__":
+    usage()
+    if msg is not None:
+        logger.info(msg)

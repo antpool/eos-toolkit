@@ -1,5 +1,9 @@
-import http
+import argparse
 
+import http
+import init_work_home
+
+init_work_home.init()
 from config.config import NotifyConfig
 
 beary_chat_id = NotifyConfig.get_beary_chat_id()
@@ -57,3 +61,16 @@ class Telegram:
         telegram_url = "https://api.telegram.org/bot%s/sendMessage" % (token)
         param = {"chat_id": chat_id, "text": message}
         http.post('telegram', telegram_url, params=param)
+
+
+def usage():
+    global msg
+    parser = argparse.ArgumentParser(description='notify tool.')
+    parser.add_argument('-m', '--msg', default=None, help='notify msg')
+    args = parser.parse_args()
+    msg = args.msg
+
+
+if __name__ == "__main__":
+    usage()
+    Notify.notify(msg)

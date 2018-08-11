@@ -49,6 +49,26 @@ class Config:
         return bidname_list
 
 
+class ClaimConfig:
+    section = "claim"
+
+    @staticmethod
+    def get_client():
+        return cf.get(ClaimConfig.section, "eos_client")
+
+    @staticmethod
+    def get_wallet_name():
+        return cf.get(ClaimConfig.section, "wallet_name")
+
+    @staticmethod
+    def get_wallet_pwd():
+        return cf.get(ClaimConfig.section, "wallet_password")
+
+    @staticmethod
+    def get_wallet_api():
+        return cf.get(ClaimConfig.section, "wallet_api")
+
+
 class LogConfig:
     section = "logger"
 
