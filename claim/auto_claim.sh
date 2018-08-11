@@ -17,8 +17,8 @@ init_config() {
     last_claim_time_cache="${claim_home}/claim_cache_info"
     can_claim=false
     notify_tool="python ${work_home}/utils/notify.py"
+    reward_tool="python ${work_home}/monitor/bp_status_monitor.py"
     logger="python ${work_home}/utils/logger.py"
-    log "${cleos}"
     if [ ! -f "${eos_client}" ] || [ "${wallet_pwd}" == "" ]; then
         log "please check client or wallet_pwd config"
         exit 0
@@ -52,6 +52,8 @@ claim_rewards() {
     unlock_wallet
     claim_result=$(${cleos} push action eosio claimrewards '{"owner":"'${bp_account}'"}' -p ${bp_account}@claimer 2>&1)
     if [ $? -gt 0 ];then
+        # remove color code
+        claim_result=$(echo "${claim_result}" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g")
         notify "claim fail\n${claim_result}"
         update_cache
         exit 1
@@ -78,7 +80,7 @@ claim_success() {
 
 update_cache() {
     bp_info=`curl -sX POST ${api}/v1/chain/get_producers -d '{"limit":"1","lower_bound":"'${bp_account}'","json":"true"}'|jq '.rows[0]'`
-    log ${bp_info}
+    log "update claim cache: ${bp_info}"
     bp_name=`echo "${bp_info}"|jq '.owner'|sed 's/"//g'`
     [ "${bp_account}" != "${bp_name}" ] && log "${bp_account} get nothing." && return
     last_claim_time=`echo "${bp_info}"|jq '.last_claim_time'|sed 's/"//g'`
@@ -108,10 +110,22 @@ check_claim_time() {
     fi
 }
 
+check_rewards() {
+    reward_pay=`${reward_tool} -d "rewards"`
+    if [ "${reward_pay}" == "" ]; then
+        log "query reward error"
+        exit 1
+    elif [ $(echo "100.0>${reward_pay}"|bc) -eq 1 ]; then
+        log "${reward_pay} reward not enough"
+        exit 1
+    fi
+}
+
 process_claim() {
     init_config
     check_api
     check_claim_time
+    check_rewards
     claim_rewards
 }
 
