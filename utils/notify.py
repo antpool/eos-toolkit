@@ -1,7 +1,10 @@
-import requests
+import argparse
 
+import http
+import init_work_home
+
+init_work_home.init()
 from config.config import NotifyConfig
-from logger import logger
 
 beary_chat_id = NotifyConfig.get_beary_chat_id()
 beary_token = NotifyConfig.get_beary_token()
@@ -17,10 +20,10 @@ class Notify:
         Notify.all_notify(msg, *args)
 
     @staticmethod
-    def all_notify(msg, *args):
-        if args is not None and len(args) > 0:
-            for arg in args:
-                msg = msg + '\n' + arg
+    def all_notify(*args):
+        if args is None or len(args) < 1:
+            return
+        msg = '\n'.join(args)
         Beary.beary_notify(msg, beary_chat_id, beary_token)
         DingTalk.ding_talk_notify(msg, ding_talk_token)
         Telegram.telegram_notify(msg, telegram_chat_id, telegram_token)
@@ -33,7 +36,7 @@ class DingTalk:
             return
         ding_talk_hook_url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
         body = ('{"msgtype":"text","text":{"content":"%s"}}' % (message))
-        post('ding_talk', ding_talk_hook_url, data=body)
+        http.post('ding_talk', ding_talk_hook_url, data=body, headers=http.def_headers)
 
 
 class Beary:
@@ -45,7 +48,7 @@ class Beary:
             return
         beary_hook_url = ("https://hook.bearychat.com/%s/incoming/%s" % (chat_id, token))
         body = ('{"text":"%s"}' % (message))
-        post('beary', beary_hook_url, data=body)
+        http.post('beary', beary_hook_url, data=body, headers=http.def_headers)
 
 
 class Telegram:
@@ -57,18 +60,17 @@ class Telegram:
             return
         telegram_url = "https://api.telegram.org/bot%s/sendMessage" % (token)
         param = {"chat_id": chat_id, "text": message}
-        post('telegram', telegram_url, param=param)
+        http.post('telegram', telegram_url, params=param)
 
 
-def_headers = {'Content-Type': 'application/json'}
+def usage():
+    global msg
+    parser = argparse.ArgumentParser(description='notify tool.')
+    parser.add_argument('-m', '--msg', default=None, help='notify msg')
+    args = parser.parse_args()
+    msg = args.msg
 
 
-def post(notify_type, url, headers=def_headers, timeout=3.0, data=None, param=None):
-    try:
-        if param is not None:
-            response = requests.post(url, param, timeout=timeout)
-        else:
-            response = requests.post(url, data=data, headers=headers, timeout=timeout)
-        logger.info("%s: %s", notify_type, response.json())
-    except Exception as e:
-        logger.error("%s notify exception:%s", notify_type, e)
+if __name__ == "__main__":
+    usage()
+    Notify.notify(msg)

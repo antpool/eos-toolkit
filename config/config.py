@@ -39,6 +39,35 @@ class Config:
     def get_bp_account():
         return cf.get(Config.section, "bp_account")
 
+    @staticmethod
+    def get_bidname_list():
+        bidname_list = []
+        name_list = cf.get(Config.section, "bidname_list").split(',')
+        for name in name_list:
+            if name != "":
+                bidname_list.append(name)
+        return bidname_list
+
+
+class ClaimConfig:
+    section = "claim"
+
+    @staticmethod
+    def get_client():
+        return cf.get(ClaimConfig.section, "eos_client")
+
+    @staticmethod
+    def get_wallet_name():
+        return cf.get(ClaimConfig.section, "wallet_name")
+
+    @staticmethod
+    def get_wallet_pwd():
+        return cf.get(ClaimConfig.section, "wallet_password")
+
+    @staticmethod
+    def get_wallet_api():
+        return cf.get(ClaimConfig.section, "wallet_api")
+
 
 class LogConfig:
     section = "logger"
