@@ -41,7 +41,10 @@ notify() {
 unlock_wallet() {
     lock_wallet
     ${cleos} wallet unlock -n ${wallet_name} --password=${wallet_pwd} > /dev/null
-    [ $? != 0 ] && notify "claim fail\nunlock wallet fail" && exit 1 || return 0
+    if [ $? != 0 ];then
+        notify "claim fail\nunlock wallet fail"
+        exit 1
+    fi
 }
 
 lock_wallet() {
@@ -73,7 +76,7 @@ get_balance() {
 claim_success() {
     lock_wallet
     get_balance
-    notify "claim success\nbpay:${bpay}\nvpay:${vpay}\nbalance:${balance}\nhttps://eosflare.io/account/${account}"
+    notify "claim success\nbpay:${bpay}\nvpay:${vpay}\nbalance:${balance}\nhttps://eosflare.io/account/${bp_account}"
     can_claim=false
     update_cache
 }
@@ -95,7 +98,10 @@ update_cache() {
 
 check_api() {
     code=`curl -I -m 10 -o /dev/null -s -w %{http_code} "${api}/v1/chain/get_info"`
-    [ "${code}" != 200 ] && notify "claim fail\nplease check api:${api}" && exit 1
+    if [ "${code}" != 200 ];then
+        notify "claim fail\nplease check api:${api}"
+        exit 1
+    fi
 }
 
 check_claim_time() {
