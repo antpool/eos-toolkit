@@ -16,6 +16,8 @@ bp_name = Config.get_bp_account()
 
 max_check_period = 150
 interval = 20
+block_interval = 8
+all_block_interval = 130
 
 
 def log(msg):
@@ -37,7 +39,7 @@ def get_unpaid_block():
     return unpaid_blocks
 
 
-def check_bp_produce():
+def get_last_unpaid_blocks():
     last_unpaid_blocks = 0
     last_date = time.time()
     while True:
@@ -47,8 +49,10 @@ def check_bp_produce():
             break
         if unpaid_blocks != last_unpaid_blocks:
             if last_unpaid_blocks != 0:
-                log('produce check success')
-                break
+                time.sleep(block_interval)
+                unpaid_blocks = get_unpaid_block()
+                log('produce check success, unpaid_blocks:%s' % unpaid_blocks)
+                return unpaid_blocks
             last_unpaid_blocks = unpaid_blocks
             last_date = time.time()
             time.sleep(1)
@@ -62,5 +66,19 @@ def check_bp_produce():
                 time.sleep(interval)
 
 
+def check_bp_block():
+    last_unpaid_blocks = get_last_unpaid_blocks()
+    if last_unpaid_blocks is not None:
+        time.sleep(all_block_interval)
+        unpaid_blocks = get_unpaid_block()
+        produce_blocks = unpaid_blocks - last_unpaid_blocks
+        if produce_blocks == 12:
+            log("produce blocks count last:%s, now:%s, success" % (last_unpaid_blocks, unpaid_blocks))
+        elif produce_blocks < 0:
+            notify("maybe claim now, unpaid_last:%s, unpaid_now:%s" % (last_unpaid_blocks, unpaid_blocks))
+        else:
+            notify("produced blocks check Failed, %s" % produce_blocks)
+
+
 if __name__ == '__main__':
-    check_bp_produce()
+    check_bp_block()
