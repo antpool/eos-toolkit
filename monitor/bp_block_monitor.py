@@ -49,11 +49,12 @@ def get_unpaid_block():
 def get_last_unpaid_blocks():
     last_unpaid_blocks = 0
     last_date = time.time()
-    head_num, unpaid_blocks = None, None
+    head_num = get_block_num()
     while True:
         unpaid_blocks = get_unpaid_block()
         if unpaid_blocks is None:
             log('not in top21')
+            unpaid_blocks = None
             break
         if unpaid_blocks != last_unpaid_blocks:
             if last_unpaid_blocks != 0:
@@ -67,7 +68,8 @@ def get_last_unpaid_blocks():
         else:
             delta = time.time() - last_date
             if delta > max_check_period:
-                notify('not producing for too long')
+                notify('not producing for too long after %s' % head_num)
+                unpaid_blocks = None
                 break
             else:
                 time.sleep(interval)
