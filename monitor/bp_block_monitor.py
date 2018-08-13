@@ -75,7 +75,7 @@ def check_bp_block():
         elif produce_blocks < 0:
             notify("maybe claim now, unpaid_last:%s, unpaid_now:%s" % (last_unpaid_blocks, unpaid_blocks))
         else:
-            notify("produced blocks check Failed, %s" % produce_blocks)
+            notify("produced blocks check Failed, missed %s" % (12 - produce_blocks))
 
 
 if __name__ == '__main__':
