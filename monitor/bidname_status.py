@@ -48,5 +48,9 @@ def get_all_bidname_info():
         get_bindname_info(bidname)
 
 
-if __name__ == '__main__':
+def main():
     get_all_bidname_info()
+
+
+if __name__ == '__main__':
+    main()

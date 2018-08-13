@@ -92,5 +92,9 @@ def check_bp_produce():
                    (last_head_num, head_num, (bp_produce_block_count - produce_blocks)))
 
 
-if __name__ == '__main__':
+def main():
     check_bp_produce()
+
+
+if __name__ == '__main__':
+    main()

@@ -49,6 +49,34 @@ class Config:
         return bidname_list
 
 
+class MonitorConfig:
+    section = "monitor"
+
+    @staticmethod
+    def node_monitor_enable():
+        return cf.get(MonitorConfig.section, "node_monitor") == "true"
+
+    @staticmethod
+    def eos_process_monitor_enable():
+        return cf.get(MonitorConfig.section, "process_monitor") == "true"
+
+    @staticmethod
+    def bp_status_monitor_enable():
+        return cf.get(MonitorConfig.section, "bp_status_monitor") == "true"
+
+    @staticmethod
+    def bp_block_monitor_enable():
+        return cf.get(MonitorConfig.section, "bp_block_monitor") == "true"
+
+    @staticmethod
+    def bidname_monitor_enable():
+        return cf.get(MonitorConfig.section, "bidname_monitor") == "true"
+
+    @staticmethod
+    def auto_claim_enable():
+        return cf.get(MonitorConfig.section, "auto_claim") == "true"
+
+
 class ClaimConfig:
     section = "claim"
 
