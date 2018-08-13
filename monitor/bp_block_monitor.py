@@ -16,8 +16,7 @@ bp_name = Config.get_bp_account()
 
 max_check_period = 150
 interval = 20
-block_interval = 8
-all_block_interval = 130
+block_interval = 12
 
 
 def log(msg):
@@ -69,8 +68,7 @@ def get_last_unpaid_blocks():
 def check_bp_block():
     last_unpaid_blocks = get_last_unpaid_blocks()
     if last_unpaid_blocks is not None:
-        time.sleep(all_block_interval)
-        unpaid_blocks = get_unpaid_block()
+        unpaid_blocks = get_last_unpaid_blocks()
         produce_blocks = unpaid_blocks - last_unpaid_blocks
         if produce_blocks == 12:
             log("produce blocks count last:%s, now:%s, success" % (last_unpaid_blocks, unpaid_blocks))
