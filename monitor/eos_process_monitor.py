@@ -39,12 +39,12 @@ class Monitor:
     def ram(self):
         ram_usage = process.memory_percent()
         ram_usage = round(ram_usage, 2)
-        self.metric_collect(Metric.ram, ram_usage)
+        self.metric_collect(Metric.memory_percent, ram_usage)
 
     def cpu(self):
         cpu_usage = process.cpu_percent(interval=1)
         cpu_usage = round(cpu_usage, 2)
-        self.metric_collect(Metric.cpu, cpu_usage)
+        self.metric_collect(Metric.cpu_percent, cpu_usage)
 
     def connections(self):
         connections = psutil.net_connections('tcp')

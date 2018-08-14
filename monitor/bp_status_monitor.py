@@ -96,7 +96,7 @@ def get_bp_account_info():
     get_account_info()
     get_issue_token()
     get_rewards_info()
-    Metric.metric(Metric.rank, rank)
+    Metric.metric(Metric.rank, rank, bp_name)
     bp = 'bp: %s' % bp_name
     votes = 'votes: %s' % votes2eos(bp_vote_weight)
     rank_info = 'rank: %s' % rank

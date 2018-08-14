@@ -49,6 +49,14 @@ class Config:
         return bidname_list
 
 
+class MetricConfig:
+    section = "metrics"
+
+    @staticmethod
+    def get_prometheus_host_port():
+        return cf.get(MetricConfig.section, "prometheus_host_port")
+
+
 class MonitorConfig:
     section = "monitor"
 
