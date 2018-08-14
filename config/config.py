@@ -124,8 +124,8 @@ class NotifyConfig:
     section = "notify"
 
     @staticmethod
-    def get_beary_chat_id():
-        return cf.get(NotifyConfig.section, "beary_chat_id")
+    def get_beary_id():
+        return cf.get(NotifyConfig.section, "beary_id")
 
     @staticmethod
     def get_beary_token():
@@ -134,6 +134,18 @@ class NotifyConfig:
     @staticmethod
     def get_ding_talk_token():
         return cf.get(NotifyConfig.section, "ding_talk_token")
+
+    @staticmethod
+    def get_err_beary_id():
+        return cf.get(NotifyConfig.section, "err_beary_id")
+
+    @staticmethod
+    def get_err_beary_token():
+        return cf.get(NotifyConfig.section, "err_beary_token")
+
+    @staticmethod
+    def get_err_ding_talk_token():
+        return cf.get(NotifyConfig.section, "err_ding_talk_token")
 
     @staticmethod
     def get_telegram_token():

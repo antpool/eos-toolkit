@@ -15,7 +15,7 @@ from utils.logger import logger
 from utils import http
 
 url_local = Config.get_local_api()
-max_height_diff = Config.get_max_height_diff()
+max_height_diff = int(Config.get_max_height_diff())
 remote_api_list = Config.get_api_list()
 remote_api_size = len(remote_api_list)
 http_time_out_sec = 2.0 / (remote_api_size + 2)
@@ -23,7 +23,7 @@ hostname = '【%s】' % socket.gethostname()
 
 
 def log_and_notify(*args):
-    Notify.notify(*args)
+    Notify.notify_error(*args)
 
 
 def diff_record_or_warning(local_block_num, remote_block_num, other_api):

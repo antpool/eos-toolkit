@@ -26,7 +26,7 @@ just_get_rewards = None
 
 def notify(*args):
     logger.info(args)
-    Notify.notify(*args)
+    Notify.notify_status(*args)
 
 
 def get_global_info():

@@ -26,7 +26,7 @@ def log(msg):
 
 def notify(msg):
     log(msg)
-    Notify.notify(bp_name, msg)
+    Notify.notify_error(bp_name, msg)
 
 
 def get_block_num():

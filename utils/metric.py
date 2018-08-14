@@ -1,12 +1,9 @@
-from logger import logger
-
 try:
     import alicms
 
     alicms_enable = True
 except Exception as e:
     alicms_enable = False
-    logger.error(e)
 
 
 class Metric:
