@@ -13,8 +13,8 @@ cur_home=$(cd `dirname $0`;pwd)
 work_home=$(cd ${cur_home};cd ../;pwd)
 sample_config="${work_home}/systemctl/eosmonitor.service"
 sudo cp ${sample_config} ${eos_monitor_config}
-sudo sed -i 's#/path/eos-toolkit#'${work_home}'#' ${sample_config}
-cat ${sample_config}
+sudo sed -i 's#/path/eos-toolkit#'${work_home}'#' ${eos_monitor_config}
+cat ${eos_monitor_config}
 
 sudo systemctl daemon-reload
 sudo systemctl start eosmonitor.service
