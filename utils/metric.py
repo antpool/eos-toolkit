@@ -1,3 +1,11 @@
+try:
+    import alicms
+
+    alicms_enable = True
+except Exception as e:
+    alicms_enable = False
+
+
 class Metric:
     cpu = 'eos_cpu'
     ram = 'eos_ram'
@@ -11,4 +19,12 @@ class Metric:
     @staticmethod
     def metric(metric_name, metric_value):
         # add metric collector
-        pass
+        Alicms.metric(metric_name, metric_value)
+
+
+class Alicms:
+
+    @staticmethod
+    def metric(metric_name, metric_value):
+        if alicms_enable:
+            alicms.metric(metric_name, metric_value)

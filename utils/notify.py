@@ -6,27 +6,39 @@ import init_work_home
 init_work_home.init()
 from config.config import NotifyConfig
 
-beary_chat_id = NotifyConfig.get_beary_chat_id()
+beary_id = NotifyConfig.get_beary_id()
 beary_token = NotifyConfig.get_beary_token()
 ding_talk_token = NotifyConfig.get_ding_talk_token()
+err_beary_id = NotifyConfig.get_err_beary_id()
+err_beary_token = NotifyConfig.get_err_beary_token()
+err_ding_talk_token = NotifyConfig.get_err_ding_talk_token()
 telegram_chat_id = NotifyConfig.get_telegram_chat_id()
 telegram_token = NotifyConfig.get_telegram_token()
 
 
 class Notify:
     @staticmethod
-    def notify(msg, *args):
-        # add other like slack, sms...
-        Notify.all_notify(msg, *args)
+    def notify_status(*args):
+        Notify.all_notify(False, *args)
 
     @staticmethod
-    def all_notify(*args):
+    def notify_error(*args):
+        Notify.all_notify(True, *args)
+
+    @staticmethod
+    def all_notify(is_error, *args):
+        # add other like slack, sms...
         if args is None or len(args) < 1:
             return
         msg = '\n'.join(args)
-        Beary.beary_notify(msg, beary_chat_id, beary_token)
-        DingTalk.ding_talk_notify(msg, ding_talk_token)
-        Telegram.telegram_notify(msg, telegram_chat_id, telegram_token)
+        if is_error:
+            Beary.beary_notify(msg, err_beary_id, err_beary_token)
+            DingTalk.ding_talk_notify(msg, err_ding_talk_token)
+            Telegram.telegram_notify(msg, telegram_chat_id, telegram_token)
+        else:
+            Beary.beary_notify(msg, beary_id, beary_token)
+            DingTalk.ding_talk_notify(msg, ding_talk_token)
+            Telegram.telegram_notify(msg, telegram_chat_id, telegram_token)
 
 
 class DingTalk:
@@ -73,4 +85,4 @@ def usage():
 
 if __name__ == "__main__":
     usage()
-    Notify.notify(msg)
+    Notify.notify_status(msg)

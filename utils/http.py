@@ -6,23 +6,15 @@ def_headers = {'Content-Type': 'application/json'}
 
 
 def get(action, url, params=None, timeout=3.0, record_response=False):
-    try:
-        response = requests.get(url, params=params, timeout=timeout)
-        check_and_record(action, response, record_response)
-        return response
-    except Exception as e:
-        logger.error("%s get exception:%s", action, e)
-        raise e
+    response = requests.get(url, params=params, timeout=timeout)
+    check_and_record(action, response, record_response)
+    return response
 
 
 def post(action, url, headers=None, timeout=3.0, data=None, params=None, record_response=False):
-    try:
-        response = requests.post(url, data=data, params=params, headers=headers, timeout=timeout)
-        check_and_record(action, response, record_response)
-        return response
-    except Exception as e:
-        logger.error("%s post exception:%s", action, e)
-        raise e
+    response = requests.post(url, data=data, params=params, headers=headers, timeout=timeout)
+    check_and_record(action, response, record_response)
+    return response
 
 
 def check_and_record(action, response, record):

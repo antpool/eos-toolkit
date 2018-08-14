@@ -40,7 +40,7 @@ def handle_reponse(bidname, json):
     timestamp = 'time: %s' % timestamp
     result = [name, bidder, amount, time_str, timestamp]
     logger.info(result)
-    Notify.notify(name, bidder, amount, time_str, timestamp)
+    Notify.notify_status(name, bidder, amount, time_str, timestamp)
 
 
 def get_all_bidname_info():
@@ -48,5 +48,9 @@ def get_all_bidname_info():
         get_bindname_info(bidname)
 
 
-if __name__ == '__main__':
+def main():
     get_all_bidname_info()
+
+
+if __name__ == '__main__':
+    main()

@@ -14,6 +14,8 @@ from config.config import Config
 from utils.logger import logger
 from utils import http
 
+url_local = Config.get_local_api()
+max_height_diff = int(Config.get_max_height_diff())
 remote_api_list = Config.get_api_list()
 remote_api_size = len(remote_api_list)
 http_time_out_sec = 2.0 / (remote_api_size + 2)
@@ -21,7 +23,7 @@ hostname = '【%s】' % socket.gethostname()
 
 
 def log_and_notify(*args):
-    Notify.notify(*args)
+    Notify.notify_error(*args)
 
 
 def diff_record_or_warning(local_block_num, remote_block_num, other_api):
@@ -62,7 +64,7 @@ def get_chain_info_from_node(url, time_out_sec=http_time_out_sec):
     return success, msg
 
 
-def get_head_block_num(url_local):
+def get_head_block_num():
     remote_block_num, local_block_num = 0, 0
     result_info, other_api = get_chain_info_from_other()
     if result_info != "":
@@ -74,7 +76,7 @@ def get_head_block_num(url_local):
 
 
 def check_height():
-    local_block_num, remote_block_num, other_api = get_head_block_num(url_local)
+    local_block_num, remote_block_num, other_api = get_head_block_num()
     if remote_block_num == 0 or local_block_num == 0:
         return
     diff_record_or_warning(local_block_num, remote_block_num, other_api)
@@ -90,10 +92,8 @@ def check_node_alive(url):
 
 def usage():
     global url_local, max_height_diff
-    local_api = Config.get_local_api()
-    max_height_diff = Config.get_max_height_diff()
     parser = argparse.ArgumentParser(description='BP nodeosd monitor tool.')
-    parser.add_argument('-u', '--url_local', default=local_api, help='local node api')
+    parser.add_argument('-u', '--url_local', default=url_local, help='local node api')
     parser.add_argument('-d', '--height_diff', default=max_height_diff, help='max height diff')
     args = parser.parse_args()
     url_local = args.url_local

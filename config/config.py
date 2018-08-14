@@ -49,6 +49,34 @@ class Config:
         return bidname_list
 
 
+class MonitorConfig:
+    section = "monitor"
+
+    @staticmethod
+    def node_monitor_enable():
+        return cf.get(MonitorConfig.section, "node_monitor") == "true"
+
+    @staticmethod
+    def eos_process_monitor_enable():
+        return cf.get(MonitorConfig.section, "process_monitor") == "true"
+
+    @staticmethod
+    def bp_status_monitor_enable():
+        return cf.get(MonitorConfig.section, "bp_status_monitor") == "true"
+
+    @staticmethod
+    def bp_block_monitor_enable():
+        return cf.get(MonitorConfig.section, "bp_block_monitor") == "true"
+
+    @staticmethod
+    def bidname_monitor_enable():
+        return cf.get(MonitorConfig.section, "bidname_monitor") == "true"
+
+    @staticmethod
+    def auto_claim_enable():
+        return cf.get(MonitorConfig.section, "auto_claim") == "true"
+
+
 class ClaimConfig:
     section = "claim"
 
@@ -96,8 +124,8 @@ class NotifyConfig:
     section = "notify"
 
     @staticmethod
-    def get_beary_chat_id():
-        return cf.get(NotifyConfig.section, "beary_chat_id")
+    def get_beary_id():
+        return cf.get(NotifyConfig.section, "beary_id")
 
     @staticmethod
     def get_beary_token():
@@ -106,6 +134,18 @@ class NotifyConfig:
     @staticmethod
     def get_ding_talk_token():
         return cf.get(NotifyConfig.section, "ding_talk_token")
+
+    @staticmethod
+    def get_err_beary_id():
+        return cf.get(NotifyConfig.section, "err_beary_id")
+
+    @staticmethod
+    def get_err_beary_token():
+        return cf.get(NotifyConfig.section, "err_beary_token")
+
+    @staticmethod
+    def get_err_ding_talk_token():
+        return cf.get(NotifyConfig.section, "err_ding_talk_token")
 
     @staticmethod
     def get_telegram_token():

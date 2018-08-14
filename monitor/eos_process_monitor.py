@@ -12,6 +12,8 @@ from config.config import Config
 from utils.logger import logger
 from utils.metric import Metric
 
+pname = Config.get_process_name()
+
 
 class Monitor:
     def __init__(self, pname):
@@ -68,13 +70,16 @@ class Monitor:
 
 def usage():
     global pname
-    default_name = Config.get_process_name()
     parser = argparse.ArgumentParser(description='process cpu/ram/connections monitor tool.')
-    parser.add_argument('-n', '--pname', default=default_name, help='process name')
+    parser.add_argument('-n', '--pname', default=pname, help='process name')
     args = parser.parse_args()
     pname = args.pname
 
 
+def main():
+    Monitor(pname).monitor()
+
+
 if __name__ == '__main__':
     usage()
-    Monitor(pname).monitor()
+    main()

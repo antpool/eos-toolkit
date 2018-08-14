@@ -19,12 +19,14 @@ useconds_per_day = 24 * 3600 * 1000000
 useconds_per_year = 52 * 7 * 24 * 360 * 1000000
 
 ct = int(time.time() * 1000000)
-rank = -1
+bp_name = Config.get_bp_account()
+url = Config.get_local_api()
+just_get_rewards = None
 
 
 def notify(*args):
     logger.info(args)
-    Notify.notify(*args)
+    Notify.notify_status(*args)
 
 
 def get_global_info():
@@ -118,8 +120,6 @@ def votes2eos(votes):
 
 def usage():
     global bp_name, url, just_get_rewards
-    bp_name = Config.get_bp_account()
-    url = Config.get_local_api()
     parser = argparse.ArgumentParser(description='BP account status monitor tool.')
     parser.add_argument('-bp', '--bp_name', default=bp_name, help='bp name')
     parser.add_argument('-u', '--url', default=url, help='node api')
@@ -131,7 +131,9 @@ def usage():
 
 
 def main():
+    global rank
     try:
+        rank = -1
         get_bp_account_info()
     except Exception as e:
         logger.error("occurs exception:%s" % e)
