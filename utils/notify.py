@@ -76,13 +76,18 @@ class Telegram:
 
 
 def usage():
-    global msg
+    global msg, is_error
     parser = argparse.ArgumentParser(description='notify tool.')
     parser.add_argument('-m', '--msg', default=None, help='notify msg')
+    parser.add_argument('-e', '--error', default=None, help='None is error data')
     args = parser.parse_args()
     msg = args.msg
+    is_error = args.error
 
 
 if __name__ == "__main__":
     usage()
-    Notify.notify_status(msg)
+    if is_error is None:
+        Notify.notify_error(msg)
+    else:
+        Notify.notify_status(msg)

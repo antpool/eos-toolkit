@@ -30,6 +30,7 @@ apt-get install bc jq
 pip install requests
 pip install psutil
 pip install apscheduler
+pip install sh
 ```
 
 ### Configuration
