@@ -48,6 +48,10 @@ class Config:
                 bidname_list.append(name)
         return bidname_list
 
+    @staticmethod
+    def get_log_file():
+        return cf.get(Config.section, "eos_log_file")
+
 
 class MetricConfig:
     section = "metrics"
