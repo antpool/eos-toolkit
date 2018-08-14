@@ -1,13 +1,25 @@
 # eos-toolkit
 toolkit for EOSIO
 ```
-1. bp rank/votes/rewards... monitor
-2. node healthy/height monitor
-3. bp produce block monitor
-4. node cpu/ram/connections monitor
-5. auto claim(need setup permission claim for claimrewards and import claim's private key)
-6. bidname status monitor
+1.cpu,ram,connecitons monitor
+python /path/eos-toolkit/monitor/eos_process_monitor.py
 
+2.node alive,height check
+python /path/eos-toolkit/monitor/node_monitor.py
+
+3.bp status monitor e.g. rank,votes,reward,claim_time
+python /path/eos-toolkit/monitor/bp_status_monitor.py
+
+4.bidname status monitor
+python /path/eos-toolkit/monitor/bidname_status.py
+
+5.bp produce monitor
+python /path/eos-toolkit/monitor/bp_block_monitor.py
+
+6.auto claim
+1) setup permission claim for claimrewards and import claim's private key
+2) use 'verbose-http-errors = true' get verbose error output when claim failed
+3) /path/eos-toolkit/claim/auto_claim.sh
 ```
 
 ### Environment
@@ -77,42 +89,20 @@ utils/metric.py
 add metric collector
 ```
 
-### Run(first method)
+### Run
 ```
-/path/eos-tookit/start/monitor_start.py
+choose any one:
+1./path/eos-tookit/start/monitor_start.py
 
-use systemctl
+2.systemctl
 create /usr/lib/systemd/system/eosmonitor.service
 e.g. eos-toolkit/systemctl/eosmonitor.service
 
 systemctl start eosmonitor.service
 systemctl restart eosmonitor.service
 systemctl stop eosmonitor.service
-```
 
-### Run(second method)
-```
-1.cpu,ram,connecitons monitor
-python /path/eos-toolkit/monitor/eos_process_monitor.py
-
-2.node alive,height check
-python /path/eos-toolkit/monitor/node_monitor.py
-
-3.bp status monitor e.g. rank,votes,reward,claim_time
-python /path/eos-toolkit/monitor/bp_status_monitor.py
-
-4.bidname status monitor
-python /path/eos-toolkit/monitor/bidname_status.py
-
-5.bp produce monitor
-python /path/eos-toolkit/monitor/bp_block_monitor.py
-
-6.auto claim
-1) setup permission claim for claimrewards and import claim's private key
-2) use 'verbose-http-errors = true' get verbose error output when claim failed
-3) /path/eos-toolkit/claim/auto_claim.sh
-
-crontab
+3.crontab
 */1 * * * * python /path/eos-toolkit/monitor/eos_process_monitor.py
 */5 * * * * python /path/eos-toolkit/monitor/node_monitor.py
 */10 * * * * python /path/eos-toolkit/monitor/bp_status_monitor.py
