@@ -107,7 +107,10 @@ check_api() {
 check_claim_time() {
     [ ! -f "${last_claim_time_cache}" ] && echo "${bp_account}_last_claim_time="> ${last_claim_time_cache}
     last_claim_time_sec=`cat ${last_claim_time_cache}|grep ${bp_account}_last_claim_time|awk -F'=' '{print $2}'`
-    [ "${last_claim_time_sec}" == "" ] && update_cache
+    if [ "${last_claim_time_sec}" == "" ];then
+        update_cache
+        exit
+    fi
     diff_sec=`echo "$(date "+%s")-${last_claim_time_sec}"|bc`
     [ ${diff_sec} -gt ${seconds} ] && can_claim=true
     if [ ${can_claim} == false ]; then
