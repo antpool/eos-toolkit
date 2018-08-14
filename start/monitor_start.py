@@ -11,11 +11,11 @@ work_home = init_work_home.init()
 
 from config.config import MonitorConfig
 from utils.logger import logger
-import node_monitor
-import eos_process_monitor
-import bp_status_monitor
-import bp_block_monitor
-import bidname_status
+import monitor.node_monitor
+import monitor.eos_process_monitor
+import monitor.bp_status_monitor
+import monitor.bp_block_monitor
+import monitor.bidname_status
 
 sched = BlockingScheduler()
 
@@ -27,15 +27,15 @@ def auto_claim():
 
 def init_jobs():
     if MonitorConfig.bp_status_monitor_enable():
-        sched.add_job(bp_status_monitor.main, 'interval', minutes=10, id='bp_status_monitor')
+        sched.add_job(monitor.bp_status_monitor.main, 'interval', minutes=10, id='bp_status_monitor')
     if MonitorConfig.node_monitor_enable():
-        sched.add_job(node_monitor.main, 'interval', minutes=5, id='node_monitor')
+        sched.add_job(monitor.node_monitor.main, 'interval', minutes=5, id='node_monitor')
     if MonitorConfig.eos_process_monitor_enable():
-        sched.add_job(eos_process_monitor.main, 'interval', seconds=30, id='process_monitor')
+        sched.add_job(monitor.eos_process_monitor.main, 'interval', seconds=30, id='process_monitor')
     if MonitorConfig.bp_block_monitor_enable():
-        sched.add_job(bp_block_monitor.main, 'interval', minutes=5, id='bp_block_monitor')
+        sched.add_job(monitor.bp_block_monitor.main, 'interval', minutes=5, id='bp_block_monitor')
     if MonitorConfig.bidname_monitor_enable():
-        sched.add_job(bidname_status.main, 'interval', minutes=30, id='bidname')
+        sched.add_job(monitor.bidname_status.main, 'interval', minutes=30, id='bidname')
     if MonitorConfig.auto_claim_enable():
         sched.add_job(auto_claim, 'interval', hours=1, id='auto_claim')
 

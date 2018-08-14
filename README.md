@@ -1,9 +1,23 @@
 # eos-toolkit
 toolkit for EOSIO
+```
+1. bp rank/votes/rewards... monitor
+2. node healthy/height monitor
+3. bp produce block monitor
+4. node cpu/ram/connections monitor
+5. auto claim(need setup permission claim for claimrewards and import claim's private key)
+6. bidname status monitor
+
+```
 
 ### Environment
 ```
 python 2.7
+
+apt-get install bc jq
+pip install requests
+pip install psutil
+pip install apscheduler
 ```
 
 ### Configuration
@@ -24,6 +38,15 @@ wallet_name     = default
 wallet_password =
 wallet_api      = http://127.0.0.1:8900
 
+[monitor]
+# monitor process enable or not for start/monitor_start.py
+node_monitor      = true
+process_monitor   = true
+bp_block_monitor  = false
+bp_status_monitor = false
+bidname_monitor   = false
+auto_claim        = false
+
 [logger]
 log_home         = default                   # default is /path/eos-toolkit/logs
 monitor_log_file = monitor.log
@@ -32,11 +55,14 @@ file_enable      = true
 
 # add own info or add other notify tools slack/sms/email...
 [notify]
-beary_chat_id    =
-beary_token      =
-ding_talk_token  =
-telegram_chat_id =    # e.g. 1,2...
-telegram_token   =
+beary_id            =    # for bp status or other normal status notify
+beary_token         =
+ding_talk_token     =
+err_beary_id        =    # for exception info notify
+err_beary_token     =
+err_ding_talk_token =
+telegram_chat_id    =
+telegram_token      =
 ```
 
 ### Notify
@@ -51,7 +77,20 @@ utils/metric.py
 add metric collector
 ```
 
-### Run
+### Run(first method)
+```
+/path/eos-tookit/start/monitor_start.py
+
+use systemctl
+create /usr/lib/systemd/system/eosmonitor.service
+e.g. eos-toolkit/systemctl/eosmonitor.service
+
+systemctl start eosmonitor.service
+systemctl restart eosmonitor.service
+systemctl stop eosmonitor.service
+```
+
+### Run(second method)
 ```
 1.cpu,ram,connecitons monitor
 python /path/eos-toolkit/monitor/eos_process_monitor.py

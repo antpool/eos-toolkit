@@ -1,0 +1,10 @@
+[Unit]
+Description=eos-monitor
+
+[Service]
+User=eos
+ExecStart=/path/eos-toolkit/start/monitor_start.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
