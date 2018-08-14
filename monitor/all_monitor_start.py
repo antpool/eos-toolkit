@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 
+import subprocess
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 import init_work_home
 
-init_work_home.init()
+work_home = init_work_home.init()
 
 from config.config import MonitorConfig
 from utils.logger import logger
@@ -16,6 +18,11 @@ import bp_block_monitor
 import bidname_status
 
 sched = BlockingScheduler()
+
+
+def auto_claim():
+    claim_command = str(work_home) + '/claim/auto_claim.sh'
+    subprocess.call(claim_command)
 
 
 def init_jobs():
@@ -29,6 +36,8 @@ def init_jobs():
         sched.add_job(bp_block_monitor.main, 'interval', minutes=5, id='bp_block_monitor')
     if MonitorConfig.bidname_monitor_enable():
         sched.add_job(bidname_status.main, 'interval', minutes=30, id='bidname')
+    if MonitorConfig.auto_claim_enable():
+        sched.add_job(auto_claim, 'interval', hours=1, id='auto_claim')
 
 
 def start_jobs():
