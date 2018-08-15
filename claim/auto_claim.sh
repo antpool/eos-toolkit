@@ -29,7 +29,7 @@ init_config() {
 }
 
 get_config() {
-    echo `grep "$1" ${config_file} | awk '{print $3}'`
+    echo `egrep -m 1 "^$1" ${config_file} |sed 's/^[^=]*=//g'|sed 's/^\s*//g'|sed 's/\s+$//g'`
 }
 
 log() {

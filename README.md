@@ -1,5 +1,4 @@
 # eos-toolkit
-toolkit for EOSIO
 ```
 1.cpu,ram,connecitons monitor
 python /path/eos-toolkit/monitor/eos_process_monitor.py
@@ -20,6 +19,10 @@ python /path/eos-toolkit/monitor/bp_block_monitor.py
 1) setup permission claim for claimrewards and import claim's private key
 2) use 'verbose-http-errors = true' get verbose error output when claim failed
 3) /path/eos-toolkit/claim/auto_claim.sh
+
+7.log parser and trxs,latency metrics collect
+1) change config eos_log_file
+2) python /path/eos-toolkit/log_monitor/eos_log_monitor.py
 ```
 
 ### Environment
@@ -41,6 +44,7 @@ config/config.conf
 bp_account      = eosantpoolbp
 bidname_list    =                            # e.g. eos,one
 process_name    = nodeos                     # node process name to get pid
+eos_log_file    = /path/eos.log
 remote_api_list = http://api.bp.antpool.com, # external api list for height check
 local_api       = http://127.0.0.1:8888      # local api
 max_height_diff = 5                          # max diff for alarm
@@ -59,6 +63,9 @@ bp_block_monitor  = false
 bp_status_monitor = false
 bidname_monitor   = false
 auto_claim        = false
+
+[metrics]
+prometheus_host_port =
 
 [logger]
 log_home         = default                   # default is /path/eos-toolkit/logs
@@ -110,4 +117,29 @@ systemctl stop eosmonitor.service
 */30 * * * * python /path/eos-toolkit/monitor/bidname_status.py
 */3 * * * * python /path/eos-toolkit/monitor/bp_block_monitor.py
 0 */1 * * * /path/eos-toolkit/claim/auto_claim.sh
+```
+
+### LogParser & Monitor
+```
+choose any one:
+1./path/eos-tookit/log_monitor/eos_log_monitor.py
+
+2.systemctl
+create /usr/lib/systemd/system/eoslogmonitor.service
+e.g. eos-toolkit/systemctl/eoslogmonitor.service
+
+systemctl start eoslogmonitor.service
+systemctl restart eoslogmonitor.service
+systemctl stop eoslogmonitor.service
+```
+
+### Auto Install & Run
+```
+install
+/path/eos-tookit/start/install.sh
+1) auto install requirements
+2) auto install systemctl service
+
+run
+/path/eos-tookit/start/start_all_service.sh
 ```
