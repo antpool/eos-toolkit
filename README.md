@@ -30,13 +30,13 @@ python /path/eos-toolkit/monitor/bp_block_monitor.py
 python 2.7
 
 apt-get install bc jq
-pip install -r [requirements](requirements)
+pip install -r requirements
 ```
 
 ### Configuration
 
 ```
-[config.conf](config/config.conf)
+config/config.conf
 [eos]
 bp_account      = eosantpoolbp
 bidname_list    =                            # e.g. eos,one
