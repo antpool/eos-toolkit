@@ -2,6 +2,7 @@ import socket
 
 import http
 from config.config import MetricConfig
+from logger import logger
 
 try:
     import alicms
@@ -14,6 +15,7 @@ except Exception as e:
 class Metric:
     cpu_percent = 'eos_cpu_percent'
     memory_percent = 'eos_memory_percent'
+    memory_usage = 'eos_memory_usage'
     connections = 'eos_connections'
     rank = 'eos_bp_rank'
     height_diff = 'eos_height_diff'
@@ -25,9 +27,12 @@ class Metric:
 
     @staticmethod
     def metric(metric_name, metric_value, producer_name=None):
-        # add metric collector
-        Alicms.metric(metric_name, metric_value)
-        Prometheus.push_metrics(metric_name, metric_value, producer_name=producer_name)
+        try:
+            # add metric collector
+            Alicms.metric(metric_name, metric_value)
+            Prometheus.push_metrics(metric_name, metric_value, producer_name=producer_name)
+        except Exception as e:
+            logger.error('push metrics error:%s', e)
 
 
 class Prometheus:
