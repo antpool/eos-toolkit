@@ -30,10 +30,6 @@ python /path/eos-toolkit/monitor/bp_block_monitor.py
 python 2.7
 
 apt-get install bc jq
-pip install requests
-pip install psutil
-pip install apscheduler
-pip install sh
 ```
 
 ### Configuration
