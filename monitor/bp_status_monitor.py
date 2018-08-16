@@ -97,7 +97,6 @@ def get_bp_account_info():
     get_account_info()
     get_issue_token()
     get_rewards_info()
-    Metric.metric(Metric.rank, rank, bp_name)
     bp = 'bp: %s' % bp_name
     votes = 'votes: %s' % votes2eos(bp_vote_weight)
     rank_info = 'rank: %s' % rank
@@ -108,6 +107,7 @@ def get_bp_account_info():
     claim_info = 'claim: %s' % last_claim_time_str
     un_pay = 'unpay: %s' % un_claim_pay
     if just_get_rewards is None:
+        Metric.metric(Metric.rank, rank, bp_name)
         notify(bp, votes, rank_info, vote_rate, vote_weight, reward_info, claim_info, un_pay)
     else:
         print(all_reward)
