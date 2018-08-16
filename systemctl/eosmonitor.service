@@ -5,6 +5,7 @@ Description=eos-monitor
 User=eos
 ExecStart=/path/eos-toolkit/start/monitor_start.py
 Restart=always
+RestartSec=300s
 
 [Install]
 WantedBy=multi-user.target

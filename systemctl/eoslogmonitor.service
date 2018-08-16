@@ -5,6 +5,7 @@ Description=eos-log-monitor
 User=eos
 ExecStart=/path/eos-toolkit/log_monitor/eos_log_monitor.py
 Restart=always
+RestartSec=300s
 
 [Install]
 WantedBy=multi-user.target

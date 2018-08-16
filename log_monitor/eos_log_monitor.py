@@ -75,6 +75,7 @@ class LogParser:
         logger.info("Start LogParser")
         if not os.path.exists(eosio_log_file):
             logger.error("%s not exists", eosio_log_file)
+            return
         while True:
             try:
                 pre_line = ""
