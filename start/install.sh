@@ -55,7 +55,7 @@ install_systemctl() {
     sample_config="${work_home}/systemctl/${service_name}"
     systemctl_config_home="/usr/lib/systemd/system"
     [ ! -d ${systemctl_config_home} ] && ${su_do} mkdir ${systemctl_config_home}
-    service_config="${systemctl_config_home}/${service_config}"
+    service_config="${systemctl_config_home}/${service_name}"
     ${su_do} cp ${sample_config} ${service_config}
     ${su_do} sed -i 's#/path/eos-toolkit#'${work_home}'#' ${service_config}
     ${su_do} cat ${service_config}
