@@ -28,7 +28,7 @@ python /path/eos-toolkit/monitor/bp_block_monitor.py
 - log parser and trxs,latency metrics collect
 ```
 1) change config eos_log_file
-2) python /path/eos-toolkit/log_monitor/eos_log_monitor.py
+2) python /path/eos-toolkit/monitor/eos_log_monitor.py
 ```
 ### Environment
 ```
@@ -114,7 +114,7 @@ run
 ### LogParser & Monitor
 ```
 choose any one:
-1./path/eos-tookit/log_monitor/eos_log_monitor.py
+1./path/eos-tookit/monitor/eos_log_monitor.py
 
 2.systemctl
 create /usr/lib/systemd/system/eoslogmonitor.service
