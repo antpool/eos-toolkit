@@ -44,17 +44,18 @@ def get_global_info():
 
 def get_account_info():
     global bp_vote_weight, unpaid_blocks, last_claim_time, rank
+    rank = 0
     find_bp = False
     producers_api = url + "/v1/chain/get_producers"
     response = http.post(producers_api, producers_api, data='{"json":true,"limit":1000}')
     for data in response.json()['rows']:
+        rank = rank + 1
         if data['owner'] == bp_name:
             bp_vote_weight = float(data['total_votes'])
             unpaid_blocks = int(data['unpaid_blocks'])
             last_claim_time = int(data['last_claim_time'])
             find_bp = True
             break
-        rank = rank + 1
     if not find_bp:
         logger.info("%s not found." % (bp_name))
         return
@@ -96,7 +97,7 @@ def get_bp_account_info():
     get_account_info()
     get_issue_token()
     get_rewards_info()
-    Metric.metric(Metric.rank, rank)
+    Metric.metric(Metric.rank, rank, bp_name)
     bp = 'bp: %s' % bp_name
     votes = 'votes: %s' % votes2eos(bp_vote_weight)
     rank_info = 'rank: %s' % rank
@@ -133,7 +134,6 @@ def usage():
 def main():
     global rank
     try:
-        rank = -1
         get_bp_account_info()
     except Exception as e:
         logger.error("occurs exception:%s" % e)

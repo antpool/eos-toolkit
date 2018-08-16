@@ -18,7 +18,7 @@ def post(action, url, headers=None, timeout=3.0, data=None, params=None, record_
 
 
 def check_and_record(action, response, record):
-    if response.status_code != 200:
+    if response.status_code / 200 != 1:
         raise Exception(response.text)
     if record:
         logger.info("%s: %s", action, response.json())

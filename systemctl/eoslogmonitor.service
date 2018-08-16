@@ -1,9 +1,9 @@
 [Unit]
-Description=eos-monitor
+Description=eos-log-monitor
 
 [Service]
 User=eos
-ExecStart=/path/eos-toolkit/start/monitor_start.py
+ExecStart=/path/eos-toolkit/log_monitor/eos_log_monitor.py
 Restart=always
 RestartSec=300s
 

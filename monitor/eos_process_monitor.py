@@ -13,6 +13,8 @@ from utils.logger import logger
 from utils.metric import Metric
 
 pname = Config.get_process_name()
+memory_total_bytes = float(psutil.virtual_memory().total)
+memory_total_gb = memory_total_bytes / 1024 / 1024 / 1024
 
 
 class Monitor:
@@ -36,15 +38,17 @@ class Monitor:
         self.init_pid()
         process = psutil.Process(self.pid)
 
-    def ram(self):
-        ram_usage = process.memory_percent()
-        ram_usage = round(ram_usage, 2)
-        self.metric_collect(Metric.ram, ram_usage)
+    def memory(self):
+        memory_percent = process.memory_percent()
+        memory_usage_gb = round(memory_total_gb * memory_percent / 100, 2)
+        memory_percent = round(memory_percent, 2)
+        self.metric_collect(Metric.memory_percent, memory_percent)
+        self.metric_collect(Metric.memory_usage, memory_usage_gb)
 
     def cpu(self):
-        cpu_usage = process.cpu_percent(interval=1)
-        cpu_usage = round(cpu_usage, 2)
-        self.metric_collect(Metric.cpu, cpu_usage)
+        cpu_usage_percent = process.cpu_percent(interval=1)
+        cpu_usage_percent = round(cpu_usage_percent, 2)
+        self.metric_collect(Metric.cpu_percent, cpu_usage_percent)
 
     def connections(self):
         connections = psutil.net_connections('tcp')
@@ -62,7 +66,7 @@ class Monitor:
         try:
             self.init_process()
             self.cpu()
-            self.ram()
+            self.memory()
             self.connections()
         except Exception as e:
             logger.error('process monitor error: %s', e)

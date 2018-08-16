@@ -48,6 +48,18 @@ class Config:
                 bidname_list.append(name)
         return bidname_list
 
+    @staticmethod
+    def get_log_file():
+        return cf.get(Config.section, "eos_log_file")
+
+
+class MetricConfig:
+    section = "metrics"
+
+    @staticmethod
+    def get_prometheus_host_port():
+        return cf.get(MetricConfig.section, "prometheus_host_port")
+
 
 class MonitorConfig:
     section = "monitor"
