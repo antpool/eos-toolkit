@@ -1,40 +1,46 @@
 # eos-toolkit
+- cpu,memory,connecitons monitor
 ```
-1.cpu,ram,connecitons monitor
 python /path/eos-toolkit/monitor/eos_process_monitor.py
-
-2.node alive,height check
+```
+- node alive,height check
+```
 python /path/eos-toolkit/monitor/node_monitor.py
-
-3.bp status monitor e.g. rank,votes,reward,claim_time
+```
+- bp status(rank,votes,reward,claim_time) monitor
+```
 python /path/eos-toolkit/monitor/bp_status_monitor.py
-
-4.bidname status monitor
+```
+- bidname status monitor
+```
 python /path/eos-toolkit/monitor/bidname_status.py
-
-5.bp produce monitor
+```
+- bp produce monitor
+```
 python /path/eos-toolkit/monitor/bp_block_monitor.py
-
-6.auto claim
+```
+- auto claim
+```
 1) setup permission claim for claimrewards and import claim's private key
 2) use 'verbose-http-errors = true' get verbose error output when claim failed
 3) /path/eos-toolkit/claim/auto_claim.sh
-
-7.log parser and trxs,latency metrics collect
+```
+- log parser and trxs,latency metrics collect
+```
 1) change config eos_log_file
 2) python /path/eos-toolkit/log_monitor/eos_log_monitor.py
 ```
-
 ### Environment
 ```
 python 2.7
-
+```
+### Requirements
+```
 apt-get install bc jq
 pip install -r requirements
 ```
 
 ### Configuration
-
 ```
 config/config.conf
 [eos]
@@ -94,7 +100,32 @@ utils/metric.py
 add metric collector
 ```
 
-### Run
+### Auto Install & Run
+```
+install
+/path/eos-tookit/start/install.sh
+1) auto install requirements
+2) auto install systemctl service
+
+run
+/path/eos-tookit/start/start_all_service.sh
+```
+
+### LogParser & Monitor
+```
+choose any one:
+1./path/eos-tookit/log_monitor/eos_log_monitor.py
+
+2.systemctl
+create /usr/lib/systemd/system/eoslogmonitor.service
+e.g. eos-toolkit/systemctl/eoslogmonitor.service
+
+systemctl start eoslogmonitor.service
+systemctl restart eoslogmonitor.service
+systemctl stop eoslogmonitor.service
+```
+
+### Monitor
 ```
 choose any one:
 1./path/eos-tookit/start/monitor_start.py
@@ -114,29 +145,4 @@ systemctl stop eosmonitor.service
 */30 * * * * python /path/eos-toolkit/monitor/bidname_status.py
 */3 * * * * python /path/eos-toolkit/monitor/bp_block_monitor.py
 0 */1 * * * /path/eos-toolkit/claim/auto_claim.sh
-```
-
-### LogParser & Monitor
-```
-choose any one:
-1./path/eos-tookit/log_monitor/eos_log_monitor.py
-
-2.systemctl
-create /usr/lib/systemd/system/eoslogmonitor.service
-e.g. eos-toolkit/systemctl/eoslogmonitor.service
-
-systemctl start eoslogmonitor.service
-systemctl restart eoslogmonitor.service
-systemctl stop eoslogmonitor.service
-```
-
-### Auto Install & Run
-```
-install
-/path/eos-tookit/start/install.sh
-1) auto install requirements
-2) auto install systemctl service
-
-run
-/path/eos-tookit/start/start_all_service.sh
 ```
