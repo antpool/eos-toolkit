@@ -60,12 +60,14 @@ wallet_api      = http://127.0.0.1:8900
 
 [monitor]
 # monitor process enable or not for start/monitor_start.py
-node_monitor      = true
-process_monitor   = true
-bp_block_monitor  = false
-bp_status_monitor = false
-bidname_monitor   = false
-auto_claim        = false
+# e.g. True,30s: enable and monitor every 30s
+# s:second, m:minute, h:hour
+node_monitor      = True,1m
+process_monitor   = True,30s
+bp_block_monitor  = False,5m
+bp_status_monitor = False,10m
+bidname_monitor   = False,30m
+auto_claim        = False,10m
 
 [metrics]
 prometheus_host_port =
@@ -73,8 +75,8 @@ prometheus_host_port =
 [logger]
 log_home         = default                   # default is /path/eos-toolkit/logs
 monitor_log_file = monitor.log
-console_enable   = true
-file_enable      = true
+console_enable   = True
+file_enable      = True
 
 # add own info or add other notify tools slack/sms/email...
 [notify]
