@@ -10,7 +10,7 @@
 - Claim
     - [auto claim](claim)
 - Log Collect
-    - [log parser and trxs,latency metrics collect](monitor)
+    - [log parser and metrics collect](monitor)
 - Utils
     - [notify & metrics](utils)
 

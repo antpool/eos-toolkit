@@ -20,7 +20,7 @@ python /path/eos-toolkit/monitor/bidname_status.py
 ```
 python /path/eos-toolkit/monitor/bp_block_monitor.py
 ```
-- log parser and trxs,latency metrics collect
+- log parser and metrics(trxs,latency) collect
 ```
 1) change config eos_log_file
 2) python /path/eos-toolkit/monitor/eos_log_monitor.py
