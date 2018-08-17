@@ -3,8 +3,6 @@
 ### Install
 ```
 /path/eos-tookit/start/install.sh
-1) auto install requirements
-2) auto install systemctl service
 ```
 
 ### Run
