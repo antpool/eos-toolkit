@@ -1,5 +1,6 @@
 import ConfigParser
 import os
+import re
 
 cf = ConfigParser.ConfigParser()
 work_home = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -65,28 +66,43 @@ class MonitorConfig:
     section = "monitor"
 
     @staticmethod
-    def node_monitor_enable():
-        return cf.getboolean(MonitorConfig.section, "node_monitor")
+    def node_monitor():
+        return MonitorConfig.get("node_monitor", enable=True, cron="5m")
 
     @staticmethod
-    def eos_process_monitor_enable():
-        return cf.getboolean(MonitorConfig.section, "process_monitor")
+    def eos_process_monitor():
+        return MonitorConfig.get("process_monitor", enable=True, cron="30s")
 
     @staticmethod
-    def bp_status_monitor_enable():
-        return cf.getboolean(MonitorConfig.section, "bp_status_monitor")
+    def bp_status_monitor():
+        return MonitorConfig.get("bp_status_monitor", enable=False, cron="10m")
 
     @staticmethod
-    def bp_block_monitor_enable():
-        return cf.getboolean(MonitorConfig.section, "bp_block_monitor")
+    def bp_block_monitor():
+        return MonitorConfig.get("bp_block_monitor", enable=False, cron="5m")
 
     @staticmethod
-    def bidname_monitor_enable():
-        return cf.getboolean(MonitorConfig.section, "bidname_monitor")
+    def bidname_monitor():
+        return MonitorConfig.get("bidname_monitor", enable=False, cron="30m")
 
     @staticmethod
-    def auto_claim_enable():
-        return cf.getboolean(MonitorConfig.section, "auto_claim")
+    def auto_claim():
+        return MonitorConfig.get("auto_claim", enable=False, cron="10m")
+
+    @staticmethod
+    def get(key, enable=False, cron=None):
+        value = cf.get(MonitorConfig.section, key)
+        pattern = '(?P<enable>\w*)\s*,\s*(?P<cron>[1-9][0-9]*[smh])\s*.*'
+        res = re.search(pattern, value)
+        if res is None:
+            return enable, cron
+        group_dict = res.groupdict()
+        enable_ = group_dict['enable']
+        if enable_ == "True":
+            enable_ = True
+        else:
+            enable_ = False
+        return enable_, group_dict['cron']
 
 
 class ClaimConfig:

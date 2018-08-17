@@ -26,18 +26,38 @@ def auto_claim():
 
 
 def init_jobs():
-    if MonitorConfig.bp_status_monitor_enable():
-        sched.add_job(monitor.bp_status_monitor.main, 'interval', minutes=10, id='bp_status_monitor')
-    if MonitorConfig.node_monitor_enable():
-        sched.add_job(monitor.node_monitor.main, 'interval', minutes=5, id='node_monitor')
-    if MonitorConfig.eos_process_monitor_enable():
-        sched.add_job(monitor.eos_process_monitor.main, 'interval', seconds=30, id='process_monitor')
-    if MonitorConfig.bp_block_monitor_enable():
-        sched.add_job(monitor.bp_block_monitor.main, 'interval', minutes=5, id='bp_block_monitor')
-    if MonitorConfig.bidname_monitor_enable():
-        sched.add_job(monitor.bidname_status.main, 'interval', minutes=30, id='bidname')
-    if MonitorConfig.auto_claim_enable():
-        sched.add_job(auto_claim, 'interval', hours=1, id='auto_claim')
+    enable, cron = MonitorConfig.node_monitor()
+    add_job(monitor.node_monitor.main, enable, cron, 'node_monitor')
+
+    enable, cron = MonitorConfig.eos_process_monitor()
+    add_job(monitor.eos_process_monitor.main, enable, cron, 'eos_process_monitor')
+
+    enable, cron = MonitorConfig.bp_block_monitor()
+    add_job(monitor.bp_block_monitor.main, enable, cron, 'bp_block_monitor')
+
+    enable, cron = MonitorConfig.bp_status_monitor()
+    add_job(monitor.bp_status_monitor.main, enable, cron, 'bp_status_monitor')
+
+    enable, cron = MonitorConfig.bidname_monitor()
+    add_job(monitor.bidname_status.main, enable, cron, 'bidname_monitor')
+
+    enable, cron = MonitorConfig.auto_claim()
+    add_job(auto_claim, enable, cron, 'auto_claim')
+
+
+def add_job(func, enable, cron, id):
+    logger.info('%s, %s, %s, %s', func, enable, cron, id)
+    if not enable:
+        return
+    if cron.endswith('s'):
+        seconds = int(cron.replace('s', ''))
+        sched.add_job(func, 'interval', seconds=seconds, id=id)
+    elif cron.endswith('m'):
+        minutes = int(cron.replace('m', ''))
+        sched.add_job(func, 'interval', minutes=minutes, id=id)
+    elif cron.endswith('h'):
+        hours = int(cron.replace('h', ''))
+        sched.add_job(func, 'interval', hours=hours, id=id)
 
 
 def start_jobs():
