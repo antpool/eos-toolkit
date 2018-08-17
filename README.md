@@ -1,108 +1,19 @@
 # eos-toolkit
-- cpu,memory,connecitons monitor
-```
-python /path/eos-toolkit/monitor/eos_process_monitor.py
-```
-- node alive,height check
-```
-python /path/eos-toolkit/monitor/node_monitor.py
-```
-- bp status(rank,votes,reward,claim_time) monitor
-```
-python /path/eos-toolkit/monitor/bp_status_monitor.py
-```
-- bidname status monitor
-```
-python /path/eos-toolkit/monitor/bidname_status.py
-```
-- bp produce monitor
-```
-python /path/eos-toolkit/monitor/bp_block_monitor.py
-```
-- auto claim
-```
-1) setup permission claim for claimrewards and import claim's private key
-2) use 'verbose-http-errors = true' get verbose error output when claim failed
-3) /path/eos-toolkit/claim/auto_claim.sh
-```
-- log parser and trxs,latency metrics collect
-```
-1) change config eos_log_file
-2) python /path/eos-toolkit/monitor/eos_log_monitor.py
-```
-### Environment
-```
-python 2.7
-```
-### Requirements
-```
-apt-get install bc jq
-pip install -r requirements
-```
+
+### Features
+- [cpu,memory,connecitons monitor](monitor)
+- [node alive,height check](monitor)
+- [bp status(rank,votes,reward,claim_time) monitor](monitor)
+- [bidname status monitor](monitor)
+- [bp produce monitor](monitor)
+- [auto claim](claim)
+- [log parser and trxs,latency metrics collect](monitor)
+- [notify & metrics](utils)
 
 ### Configuration
-```
-config/config.conf
-[eos]
-bp_account      = eosantpoolbp
-bidname_list    =                            # e.g. eos,one
-process_name    = nodeos                     # node process name to get pid
-eos_log_file    = /path/eos.log
-remote_api_list = http://api.bp.antpool.com, # external api list for height check
-local_api       = http://127.0.0.1:8888      # local api
-max_height_diff = 5                          # max diff for alarm
+[config](config/config.conf)
 
-[claim]
-eos_client      = /path/cleos
-wallet_name     = default
-wallet_password =
-wallet_api      = http://127.0.0.1:8900
-
-[monitor]
-# monitor process enable or not for start/monitor_start.py
-# e.g. True,30s: enable and monitor every 30s
-# s:second, m:minute, h:hour
-node_monitor      = True,1m
-process_monitor   = True,30s
-bp_block_monitor  = False,5m
-bp_status_monitor = False,10m
-bidname_monitor   = False,30m
-auto_claim        = False,10m
-
-[metrics]
-prometheus_host_port =
-
-[logger]
-log_home         = default                   # default is /path/eos-toolkit/logs
-monitor_log_file = monitor.log
-console_enable   = True
-file_enable      = True
-
-# add own info or add other notify tools slack/sms/email...
-[notify]
-beary_id            =    # for bp status or other normal status notify
-beary_token         =
-ding_talk_token     =
-err_beary_id        =    # for exception info notify
-err_beary_token     =
-err_ding_talk_token =
-telegram_chat_id    =
-telegram_token      =
-```
-
-### Notify
-```
-utils/notify.py
-add other tools e.g. sms/email...
-```
-
-### Metric
-```
-utils/metric.py
-add metric collector
-```
-
-### Auto Install & Run
+### Quick Install & Run
 ```
 install
 /path/eos-tookit/start/install.sh
@@ -113,38 +24,9 @@ run
 /path/eos-tookit/start/start_all_service.sh
 ```
 
-### LogParser & Monitor
+### Requirements
 ```
-choose any one:
-1./path/eos-tookit/monitor/eos_log_monitor.py
-
-2.systemctl
-create /usr/lib/systemd/system/eoslogmonitor.service
-e.g. eos-toolkit/systemctl/eoslogmonitor.service
-
-systemctl start eoslogmonitor.service
-systemctl restart eoslogmonitor.service
-systemctl stop eoslogmonitor.service
-```
-
-### Monitor
-```
-choose any one:
-1./path/eos-tookit/start/monitor_start.py
-
-2.systemctl
-create /usr/lib/systemd/system/eosmonitor.service
-e.g. eos-toolkit/systemctl/eosmonitor.service
-
-systemctl start eosmonitor.service
-systemctl restart eosmonitor.service
-systemctl stop eosmonitor.service
-
-3.crontab
-*/1 * * * * python /path/eos-toolkit/monitor/eos_process_monitor.py
-*/5 * * * * python /path/eos-toolkit/monitor/node_monitor.py
-*/10 * * * * python /path/eos-toolkit/monitor/bp_status_monitor.py
-*/30 * * * * python /path/eos-toolkit/monitor/bidname_status.py
-*/3 * * * * python /path/eos-toolkit/monitor/bp_block_monitor.py
-0 */1 * * * /path/eos-toolkit/claim/auto_claim.sh
+python 2.7
+apt-get install bc jq
+pip install -r requirements
 ```
