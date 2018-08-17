@@ -33,7 +33,7 @@ class Config:
 
     @staticmethod
     def get_max_height_diff():
-        return cf.get(Config.section, "max_height_diff")
+        return cf.getint(Config.section, "max_height_diff")
 
     @staticmethod
     def get_bp_account():
@@ -66,27 +66,27 @@ class MonitorConfig:
 
     @staticmethod
     def node_monitor_enable():
-        return cf.get(MonitorConfig.section, "node_monitor") == "true"
+        return cf.getboolean(MonitorConfig.section, "node_monitor")
 
     @staticmethod
     def eos_process_monitor_enable():
-        return cf.get(MonitorConfig.section, "process_monitor") == "true"
+        return cf.getboolean(MonitorConfig.section, "process_monitor")
 
     @staticmethod
     def bp_status_monitor_enable():
-        return cf.get(MonitorConfig.section, "bp_status_monitor") == "true"
+        return cf.getboolean(MonitorConfig.section, "bp_status_monitor")
 
     @staticmethod
     def bp_block_monitor_enable():
-        return cf.get(MonitorConfig.section, "bp_block_monitor") == "true"
+        return cf.getboolean(MonitorConfig.section, "bp_block_monitor")
 
     @staticmethod
     def bidname_monitor_enable():
-        return cf.get(MonitorConfig.section, "bidname_monitor") == "true"
+        return cf.getboolean(MonitorConfig.section, "bidname_monitor")
 
     @staticmethod
     def auto_claim_enable():
-        return cf.get(MonitorConfig.section, "auto_claim") == "true"
+        return cf.getboolean(MonitorConfig.section, "auto_claim")
 
 
 class ClaimConfig:
@@ -125,11 +125,11 @@ class LogConfig:
 
     @staticmethod
     def console_enable():
-        return cf.get(LogConfig.section, "console_enable") == "true"
+        return cf.getboolean(LogConfig.section, "console_enable")
 
     @staticmethod
     def file_enable():
-        return cf.get(LogConfig.section, "file_enable") == "true"
+        return cf.getboolean(LogConfig.section, "file_enable")
 
 
 class NotifyConfig:
@@ -166,3 +166,11 @@ class NotifyConfig:
     @staticmethod
     def get_telegram_chat_id():
         return cf.get(NotifyConfig.section, "telegram_chat_id")
+
+
+class Http:
+    section = "http"
+
+    @staticmethod
+    def default_time_out_sec():
+        return cf.getfloat(Http.section, "def_time_out")

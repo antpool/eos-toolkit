@@ -7,9 +7,9 @@ import init_work_home
 
 init_work_home.init()
 from config.config import Config
-from utils import http
 from utils.logger import logger
 from utils.notify import Notify
+from api import eos_api
 
 api = Config.get_local_api()
 bp_name = Config.get_bp_account()
@@ -30,19 +30,18 @@ def notify(msg):
 
 
 def get_block_num():
-    get_info_api = api + '/v1/chain/get_info'
-    response = http.get(get_info_api, get_info_api)
-    return response.json()['head_block_num']
+    success, response = eos_api.get_chain_info(api)
+    if success:
+        return response['head_block_num']
+    else:
+        return 0
 
 
 def get_unpaid_block():
     unpaid_blocks = None
-    producers_api = api + '/v1/chain/get_producers'
-    response = http.post(producers_api, producers_api, data='{"json":true,"limit":21}')
-    for data in response.json()['rows']:
-        if data['owner'] == bp_name:
-            unpaid_blocks = int(data['unpaid_blocks'])
-            break
+    producer = eos_api.get_producers(api, account=bp_name)
+    if producer:
+        unpaid_blocks = producer['unpaid_blocks']
     return unpaid_blocks
 
 

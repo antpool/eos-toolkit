@@ -12,7 +12,7 @@ from config.config import Config
 from utils.logger import logger
 from utils.metric import Metric
 from utils.notify import Notify
-from utils import http
+from api import eos_api
 
 continuous_rate = 0.0487
 useconds_per_day = 24 * 3600 * 1000000
@@ -31,10 +31,7 @@ def notify(*args):
 
 def get_global_info():
     global total_vote_weight, pervote_bucket, total_unpaid_blocks, perblock_bucket, last_pervote_bucket_fill
-    global_url = url + "/v1/chain/get_table_rows"
-    response = http.post(global_url, global_url,
-                         data='{"scope":"eosio","table":"global","json":true,"code":"eosio","limit":1}')
-    global_data = response.json()['rows'][0]
+    global_data = eos_api.get_global_info(url)
     total_vote_weight = float(global_data['total_producer_vote_weight'])
     pervote_bucket = int(global_data['pervote_bucket'])
     perblock_bucket = int(global_data['perblock_bucket'])
@@ -43,29 +40,23 @@ def get_global_info():
 
 
 def get_account_info():
-    global bp_vote_weight, unpaid_blocks, last_claim_time, rank
+    global bp_vote_weight, unpaid_blocks, last_claim_time, rank, find_bp
     rank = 0
     find_bp = False
-    producers_api = url + "/v1/chain/get_producers"
-    response = http.post(producers_api, producers_api, data='{"json":true,"limit":1000}')
-    for data in response.json()['rows']:
-        rank = rank + 1
-        if data['owner'] == bp_name:
-            bp_vote_weight = float(data['total_votes'])
-            unpaid_blocks = int(data['unpaid_blocks'])
-            last_claim_time = int(data['last_claim_time'])
-            find_bp = True
-            break
-    if not find_bp:
-        logger.info("%s not found." % (bp_name))
+    producer = eos_api.get_producers(url, account=bp_name, limit=1000)
+    if not producer:
         return
+    find_bp = True
+    rank = int(producer['rank'])
+    bp_vote_weight = float(producer['total_votes'])
+    unpaid_blocks = int(producer['unpaid_blocks'])
+    last_claim_time = int(producer['last_claim_time'])
 
 
 def get_issue_token():
     global pervote_bucket, perblock_bucket
-    currency_url = url + "/v1/chain/get_currency_stats"
-    response = http.post(currency_url, currency_url, data='{"symbol":"EOS","code":"eosio.token"}')
-    supply = float(response.json()['EOS']['supply'][:-4])
+    response = eos_api.get_currency_stats(url=url)
+    supply = float(response['supply'][:-4])
     usecs_since_last_fill = ct - last_pervote_bucket_fill
     new_tokens = continuous_rate * supply * usecs_since_last_fill / useconds_per_year
     to_producers = new_tokens / 5
@@ -93,8 +84,11 @@ def get_unclaim_pay(vote_pay, block_pay):
 
 
 def get_bp_account_info():
-    get_global_info()
     get_account_info()
+    if not find_bp:
+        logger.info("%s not found." % (bp_name))
+        return
+    get_global_info()
     get_issue_token()
     get_rewards_info()
     bp = 'bp: %s' % bp_name
