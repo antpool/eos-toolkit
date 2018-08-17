@@ -55,9 +55,9 @@ class Prometheus:
     def push_metrics(metric_name, metric_value, producer_name=None, version=None):
         metric = '%s{hostname="%s"' % (metric_name, Prometheus.hostname)
         if producer_name is not None:
-            metric = '%s, producer_name=%s' % (metric, producer_name)
+            metric = '%s, producer_name="%s"' % (metric, producer_name)
         if version is not None:
-            metric = '%s, version=%s' % (metric, version)
+            metric = '%s, version="%s"' % (metric, version)
         metric = '%s} %s' % (metric, metric_value)
         Prometheus._submit(metric)
 
