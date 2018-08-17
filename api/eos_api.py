@@ -1,8 +1,8 @@
-from config.config import Config, Http
+from config.config import Config, HttpConfig
 from utils import http
 from utils.logger import logger
 
-def_timeout = Http.default_time_out_sec()
+def_timeout = HttpConfig.default_time_out_sec()
 def_api = Config.get_local_api()
 
 

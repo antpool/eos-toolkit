@@ -168,9 +168,9 @@ class NotifyConfig:
         return cf.get(NotifyConfig.section, "telegram_chat_id")
 
 
-class Http:
+class HttpConfig:
     section = "http"
 
     @staticmethod
     def default_time_out_sec():
-        return cf.getfloat(Http.section, "def_time_out")
+        return cf.getfloat(HttpConfig.section, "def_timeout_sec")

@@ -1,10 +1,10 @@
 import requests
 
-from config.config import Http
+from config.config import HttpConfig
 from logger import logger
 
 def_headers = {'Content-Type': 'application/json'}
-def_time_out = Http.default_time_out_sec()
+def_time_out = HttpConfig.default_time_out_sec()
 
 
 def get(action, url, params=None, timeout=def_time_out, record_response=False):
