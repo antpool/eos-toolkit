@@ -3,7 +3,7 @@ Description=eos-log-monitor
 
 [Service]
 User=eos
-ExecStart=/path/eos-toolkit/log_monitor/eos_log_monitor.py
+ExecStart=/path/eos-toolkit/monitor/eos_log_monitor.py
 Restart=always
 RestartSec=300s
 

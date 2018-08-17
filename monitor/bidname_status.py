@@ -7,29 +7,17 @@ import init_work_home
 
 init_work_home.init()
 from config.config import Config
-from utils import http
 from utils.logger import logger
 from utils.notify import Notify
+from api import eos_api
 
-api = Config.get_local_api() + '/v1/chain/get_table_rows'
+api = Config.get_local_api()
 bidname_list = Config.get_bidname_list()
 
 
 def get_bindname_info(bidname):
-    params = '{"scope":"eosio",' \
-             '"table":"namebids",' \
-             '"json":true,' \
-             '"code":"eosio",' \
-             '"limit":1,' \
-             '"lower_bound":"%s"}' % bidname
-    response = http.post('bidname', api, data=params)
-    handle_reponse(bidname, response.json())
-
-
-def handle_reponse(bidname, json):
-    bid_info = json['rows'][0]
-    if bidname != bid_info['newname']:
-        logger.info('%s finish or not start bid', bidname)
+    bid_info = eos_api.get_bindname_info(bidname, url=api)
+    if not bid_info:
         return
     name = 'name: %s' % bidname
     bidder = 'bidder: %s' % bid_info['high_bidder']

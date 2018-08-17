@@ -26,11 +26,11 @@ class Metric:
         pass
 
     @staticmethod
-    def metric(metric_name, metric_value, producer_name=None):
+    def metric(metric_name, metric_value, producer_name=None, version=None):
         try:
             # add metric collector
             Alicms.metric(metric_name, metric_value)
-            Prometheus.push_metrics(metric_name, metric_value, producer_name=producer_name)
+            Prometheus.push_metrics(metric_name, metric_value, producer_name=producer_name, version=version)
         except Exception as e:
             logger.error('push metrics error:%s', e)
 
@@ -52,12 +52,13 @@ class Prometheus:
         http.post(Prometheus.action, url, data=data, headers=Prometheus.headers)
 
     @staticmethod
-    def push_metrics(metric_name, metric_value, producer_name=None):
-        if producer_name is None:
-            value = '{hostname="%s"} %s' % (Prometheus.hostname, metric_value)
-        else:
-            value = '{producer_name="%s",hostname="%s"} %s' % (producer_name, Prometheus.hostname, metric_value)
-        metric = metric_name + value
+    def push_metrics(metric_name, metric_value, producer_name=None, version=None):
+        metric = '%s{hostname="%s"' % (metric_name, Prometheus.hostname)
+        if producer_name is not None:
+            metric = '%s, producer_name="%s"' % (metric, producer_name)
+        if version is not None:
+            metric = '%s, version="%s"' % (metric, version)
+        metric = '%s} %s' % (metric, metric_value)
         Prometheus._submit(metric)
 
 
