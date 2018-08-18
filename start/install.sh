@@ -58,6 +58,7 @@ install_systemctl() {
     service_config="${systemctl_config_home}/${service_name}"
     ${su_do} cp ${sample_config} ${service_config}
     ${su_do} sed -i 's#/path/eos-toolkit#'${work_home}'#' ${service_config}
+    ${su_do} sed -i 's#User=eos#User='$(whoami)'#' ${service_config}
     ${su_do} cat ${service_config}
     ${su_do} systemctl daemon-reload
     ${su_do} systemctl status ${service_name}
