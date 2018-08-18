@@ -1,10 +1,10 @@
 import argparse
 
-import http
 import init_work_home
 
 init_work_home.init()
 from config.config import NotifyConfig
+import http
 
 beary_id = NotifyConfig.get_beary_id()
 beary_token = NotifyConfig.get_beary_token()
