@@ -5,6 +5,7 @@ import init_work_home
 init_work_home.init()
 from config.config import NotifyConfig
 import http
+from logger import logger
 
 beary_id = NotifyConfig.get_beary_id()
 beary_token = NotifyConfig.get_beary_token()
@@ -46,9 +47,12 @@ class DingTalk:
     def ding_talk_notify(message, token):
         if token is None or token is "":
             return
-        ding_talk_hook_url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
-        body = ('{"msgtype":"text","text":{"content":"%s"}}' % (message))
-        http.post('ding_talk', ding_talk_hook_url, data=body, headers=http.def_headers)
+        try:
+            ding_talk_hook_url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
+            body = ('{"msgtype":"text","text":{"content":"%s"}}' % (message))
+            http.post('ding_talk', ding_talk_hook_url, data=body, headers=http.def_headers)
+        except Exception as e:
+            logger.error("dingTalk notify error, msg:%s, exception:%s", message, e)
 
 
 class Beary:
@@ -58,9 +62,12 @@ class Beary:
             return
         if token is None or token is "":
             return
-        beary_hook_url = ("https://hook.bearychat.com/%s/incoming/%s" % (chat_id, token))
-        body = ('{"text":"%s"}' % (message))
-        http.post('beary', beary_hook_url, data=body, headers=http.def_headers)
+        try:
+            beary_hook_url = ("https://hook.bearychat.com/%s/incoming/%s" % (chat_id, token))
+            body = ('{"text":"%s"}' % (message))
+            http.post('beary', beary_hook_url, data=body, headers=http.def_headers)
+        except Exception as e:
+            logger.error("beary notify error, msg:%s, exception:%s", message, e)
 
 
 class Telegram:
@@ -70,9 +77,12 @@ class Telegram:
             return
         if token is None or token is "":
             return
-        telegram_url = "https://api.telegram.org/bot%s/sendMessage" % (token)
-        param = {"chat_id": chat_id, "text": message}
-        http.post('telegram', telegram_url, params=param)
+        try:
+            telegram_url = "https://api.telegram.org/bot%s/sendMessage" % (token)
+            param = {"chat_id": chat_id, "text": message}
+            http.post('telegram', telegram_url, params=param)
+        except Exception as e:
+            logger.error("telegram notify error, msg:%s, exception:%s", message, e)
 
 
 def usage():
