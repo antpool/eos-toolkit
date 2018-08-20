@@ -25,6 +25,11 @@ def auto_claim():
     subprocess.call(claim_command)
 
 
+def auto_restart():
+    restart_command = str(work_home) + '/monitor/auto_restart.sh'
+    subprocess.call(restart_command)
+
+
 def init_jobs():
     enable, cron = MonitorConfig.node_monitor()
     add_job(monitor.node_monitor.main, enable, cron, 'node_monitor')
@@ -43,6 +48,9 @@ def init_jobs():
 
     enable, cron = MonitorConfig.auto_claim()
     add_job(auto_claim, enable, cron, 'auto_claim')
+
+    enable, cron = MonitorConfig.auto_restart()
+    add_job(auto_restart, enable, cron, 'auto_restart')
 
 
 def add_job(func, enable, cron, id):

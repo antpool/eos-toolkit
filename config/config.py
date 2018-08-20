@@ -90,6 +90,10 @@ class MonitorConfig:
         return MonitorConfig.get("auto_claim", enable=False, cron="10m")
 
     @staticmethod
+    def auto_restart():
+        return MonitorConfig.get("auto_restart", enable=False, cron="30m")
+
+    @staticmethod
     def get(key, enable=False, cron=None):
         value = cf.get(MonitorConfig.section, key)
         pattern = '(?P<enable>\w*)\s*,\s*(?P<cron>[1-9][0-9]*[smh])\s*.*'
