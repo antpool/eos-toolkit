@@ -1,39 +1,45 @@
 #!/bin/bash
 
-tag="mainnet-1.1.4"
+tag="mainnet-1.1.6"
 
-eos_user=eos
-opt_path="/opt"
-work_home="${opt_path}/eosbp"
-data_dir="${work_home}/data"
-log_dir="${work_home}/logs"
-config_dir="${work_home}/config"
-scripts_dir="${work_home}/scripts"
+current_user=$(whoami)
+current_home=$(cd `dirname $0`;pwd)
+work_home=$(cd ${current_home};cd ../;pwd)
+get_config="${work_home}/config/config.sh"
+build_command="${current_home}/build.sh"
+
+node_type=$(${get_config} "node_type")
+bp_account=$(${get_config} "bp_account")
+
+eos_home=$(${get_config} "eos_home")
+command_dir="${eos_home}/command"
+data_dir="${eos_home}/data"
+log_dir="${eos_home}/logs"
+config_dir="${eos_home}/config"
 
 init_folder() {
-  cd /opt
-  [ ! -d ${work_home} ] && sudo mkdir ${work_home} && sudo chown ${eos_user} ${work_home}
-  cd ${work_home}
-  [ ! -d logs ] && mkdir logs
-  [ ! -d data ] && mkdir data
-  [ ! -d config ] && mkdir config
-  [ ! -d scripts ] && mkdir scripts
+    [ ! -d ${eos_home} ] && sudo mkdir -p ${eos_home} && sudo chown ${current_user} ${eos_home}
+    [ ! -d ${command_dir} ] && mkdir -p ${command_dir}
+    [ ! -d ${log_dir} ] && mkdir -p ${log_dir}
+    [ ! -d ${data_dir} ] && mkdir -p ${data_dir}
+    [ ! -d ${config_dir} ] && mkdir -p ${config_dir}
 }
 
+init_config() {
+    cp ${current_home}/config/config_${node_type}.ini ${config_dir}/config.ini
+    cp ${current_home}/config/genesis.json ${config_dir}/
+    sed -i 's/producer-name =/producer-name = '${bp_account}'/' ${config_dir}/config.ini
+}
 
 get_code() {
-  cd ${work_home}
-  git clone https://github.com/EOS-Mainnet/eos.git
-  cd eos
-  git checkout ${tag}
-  git submodule update --init --recursive
-  ./eosio_build.sh
-  cd ./build
-  sudo make install
+    cd ${eos_home}
+    git clone https://github.com/EOS-Mainnet/eos.git
+    ${build_command} ${tag}
 }
 
 main() {
   init_folder
+  init_config
   get_code
 }
 

@@ -5,13 +5,13 @@ seconds=86400
 init_config() {
     claim_home=$(cd `dirname $0`;pwd)
     work_home=$(cd ${claim_home};cd ../;pwd)
-    config_file="${work_home}/config/config.conf"
-    api=$(get_config "local_api")
-    bp_account=$(get_config "bp_account")
-    wallet_name=$(get_config "wallet_name")
-    wallet_pwd=$(get_config "wallet_password")
-    wallet_api=$(get_config "wallet_api")
-    eos_client=$(get_config "eos_client")
+    get_config="${work_home}/config/config.sh"
+    api=$(${get_config} "local_api")
+    bp_account=$(${get_config} "bp_account")
+    wallet_name=$(${get_config} "wallet_name")
+    wallet_pwd=$(${get_config} "wallet_password")
+    wallet_api=$(${get_config} "wallet_api")
+    eos_client=$(${get_config} "eos_client")
     cleos="${eos_client} -u ${api} --wallet-url=${wallet_api}"
 
     last_claim_time_cache="${claim_home}/claim_cache_info"
@@ -26,10 +26,6 @@ init_config() {
         exit 0
     fi
     init_cache
-}
-
-get_config() {
-    echo `egrep -m 1 "^$1" ${config_file} |sed 's/^[^=]*=//g'|sed 's/^\s*//g'|sed 's/\s+$//g'`
 }
 
 log() {

@@ -1,10 +1,13 @@
 #!/bin/bash
 
-work_home="/opt/eosbp"
-eos_home="${work_home}/eos"
-build_home="${eos_home}/build"
-command_home="${work_home}/command"
-logs_home="${work_home}/logs"
+current_home=$(cd `dirname $0`;pwd)
+work_home=$(cd ${current_home};cd ../;pwd)
+get_config="${work_home}/config/config.sh"
+eos_home=$(${get_config} "eos_home")
+eosio_home="${eos_home}/eos"
+build_home="${eosio_home}/build"
+command_home="${eos_home}/command"
+logs_home="${eos_home}/logs"
 build_log="${logs_home}/build.log"
 tag=""
 last_server_version=""
@@ -25,9 +28,9 @@ go_command_home() {
 
 install_command() {
   go_command_home
-  keosd="${eos_home}/build/programs/keosd/keosd"
-  nodeos="${eos_home}/build/programs/nodeos/nodeos"
-  cleos="${eos_home}/build/programs/cleos/cleos"
+  keosd="${eosio_home}/build/programs/keosd/keosd"
+  nodeos="${eosio_home}/build/programs/nodeos/nodeos"
+  cleos="${eosio_home}/build/programs/cleos/cleos"
   [ ! -f ${keosd} ] && log "${keosd} install failed." && exit 1 || rm -f ${command_home}/keosd && execute cp ${keosd} ${command_home}/keosd
   [ ! -f ${cleos} ] && log "${cleos} install failed." && exit 1 || rm -f ${command_home}/cleos && execute cp ${cleos} ${command_home}/cleos
   [ ! -f ${nodeos} ] && log "${nodeos} install failed." && exit 1 || rm -f ${command_home}/nodeos && execute cp ${nodeos} ${command_home}/nodeos
@@ -35,9 +38,9 @@ install_command() {
 
 make_eos() {
   check_tag
-  go_eos_home
+  go_eosio_home
   clear_build_home
-  ${eos_home}/eosio_build.sh
+  ${eosio_home}/eosio_build.sh
   [ 0 != $? ] && log "eosio_build failed." && exit 1
   [ ! -d build ] && log "build not exists." && exit 1
   go_build_home
@@ -56,8 +59,8 @@ go_build_home() {
   cd ${build_home}
 }
 
-go_eos_home() {
-  cd ${eos_home}
+go_eosio_home() {
+  cd ${eosio_home}
 }
 
 is_execute() {
@@ -67,7 +70,7 @@ is_execute() {
 }
 
 check_tag() {
-  go_eos_home
+  go_eosio_home
   [ "${tag}" == "" ] && log "need tag." && exit 1
   execute git pull --tags 2>/dev/null
   current_tag=`git status | head -1|sed "s/.* //g"`
@@ -83,8 +86,8 @@ check_tag() {
 }
 
 check_home() {
-  [ ! -d ${work_home} ] && log "${work_home} not exists." && exit 1
   [ ! -d ${eos_home} ] && log "${eos_home} not exists." && exit 1
+  [ ! -d ${eosio_home} ] && log "${eosio_home} not exists." && exit 1
   [ ! -d ${command_home} ] && mkdir ${command_home}
   [ ! -d ${command_home} ] && log "${command_home} not exists." && exit 1
 }

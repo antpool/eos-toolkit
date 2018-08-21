@@ -90,3 +90,11 @@ def get_bindname_info(name, url=def_api, timeout=def_timeout):
     if name != bid_info['newname']:
         return None
     return bid_info
+
+
+def get_ram_price(url=def_api, timeout=def_timeout):
+    ram_info = get_table_rows('rammarket', url=url, timeout=timeout)
+    ram = ram_info[0]
+    quote_balance = float(ram['quote']['balance'].split(' ')[0])
+    base_balance = float(ram['base']['balance'].split(' ')[0])
+    return quote_balance / base_balance * 1024
