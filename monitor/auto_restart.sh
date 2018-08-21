@@ -6,16 +6,12 @@ init_config() {
     notify_tool="python ${work_home}/utils/notify.py -m"
     logger="python ${work_home}/utils/logger.py"
     restart_command="${work_home}/node/start.sh"
-    config_file="${work_home}/config/config.conf"
+    get_config="${work_home}/config/config.sh"
 
     # minute
-    restart_interval=$(get_config "auto_restart"|grep -Eo "[0-9]+")
-    cpu_percent_limit=$(get_config "cpu_percent_limit")
+    restart_interval=$(${get_config} "auto_restart"|grep -Eo "[0-9]+")
+    cpu_percent_limit=$(${get_config} "cpu_percent_limit")
     hostname=$(hostname)
-}
-
-get_config() {
-    echo `egrep -m 1 "^$1" ${config_file} |sed -n 's/^[^=]*=\s* *\(.*\)\s* *$/\1/p'`
 }
 
 log() {
