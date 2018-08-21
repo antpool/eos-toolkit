@@ -23,8 +23,8 @@ init_folder() {
 }
 
 init_config() {
-    cp ${current_home}/config.ini ${config_dir}/
-    cp ${current_home}/genesis.json ${config_dir}/
+    cp ${current_home}/config/config.ini ${config_dir}/
+    cp ${current_home}/config/genesis.json ${config_dir}/
 }
 
 get_code() {
