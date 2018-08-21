@@ -37,6 +37,7 @@ check_cpu_percent() {
     count=`echo "${restart_interval}*2"|bc`
     cpu_percent=`grep eos_cpu_percent ${monitor_log}|tail -${count}|grep -Eo "[0-9]+\.[0-9]+"| xargs | sed 's/ /+/g'`
     average=`echo "(${cpu_percent})/${count}"|bc`
+    log "${hostname} last ${restart_interval}m cpu_percent is ${average}"
     if [ `echo "${average}>${cpu_percent_limit}"|bc` -eq 1 ]; then
         restart
     fi
