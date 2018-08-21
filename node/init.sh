@@ -6,6 +6,7 @@ current_user=$(whoami)
 current_home=$(cd `dirname $0`;pwd)
 work_home=$(cd ${current_home};cd ../;pwd)
 get_config="${work_home}/config/config.sh"
+build_command="${current_home}/build.sh"
 
 eos_home=$(${get_config} "eos_home")
 command_dir="${eos_home}/command"
@@ -29,12 +30,7 @@ init_config() {
 get_code() {
     cd ${eos_home}
     git clone https://github.com/EOS-Mainnet/eos.git
-    cd eos
-    git checkout ${tag}
-    git submodule update --init --recursive
-    ./eosio_build.sh
-    cd ./build
-    sudo make install
+    ${build_command} ${tag}
 }
 
 main() {
