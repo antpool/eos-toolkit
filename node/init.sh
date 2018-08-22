@@ -1,7 +1,5 @@
 #!/bin/bash
 
-tag="mainnet-1.1.6"
-
 current_user=$(whoami)
 current_home=$(cd `dirname $0`;pwd)
 work_home=$(cd ${current_home};cd ../;pwd)
@@ -10,6 +8,7 @@ build_command="${current_home}/build.sh"
 
 node_type=$(${get_config} "node_type")
 bp_account=$(${get_config} "bp_account")
+tag=$(${get_config} "tag")
 
 eos_home=$(${get_config} "eos_home")
 command_dir="${eos_home}/command"

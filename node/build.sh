@@ -9,7 +9,7 @@ build_home="${eosio_home}/build"
 command_home="${eos_home}/command"
 logs_home="${eos_home}/logs"
 build_log="${logs_home}/build.log"
-tag=""
+tag=$(${get_config} "tag")
 last_server_version=""
 new_server_version=""
 
@@ -93,7 +93,7 @@ check_home() {
 }
 
 build_eos() {
-  tag=$1
+  [ "$1" != "" ] && tag=$1
   check_home
   make_eos
   install_command
