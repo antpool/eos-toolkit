@@ -1,6 +1,8 @@
 # eos-toolkit
 
 ### Features
+- Install
+    - [init/build/start/stop](node)
 - Monitor
     - [cpu,memory,connecitons monitor](monitor)
     - [node alive,height check](monitor)
