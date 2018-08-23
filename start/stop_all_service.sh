@@ -11,5 +11,5 @@ su_do=""
 for service in ${service_list[*]}
 do
     ${su_do} systemctl stop ${service}
-    ${su_do} systemctl status ${service}
+    ${su_do} systemctl status ${service} -n10
 done
