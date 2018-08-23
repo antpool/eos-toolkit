@@ -13,5 +13,5 @@ do
     ${su_do} systemctl daemon-reload
     ${su_do} systemctl stop ${service}
     ${su_do} systemctl start ${service}
-    ${su_do} systemctl status ${service}
+    ${su_do} systemctl status ${service} -n10
 done

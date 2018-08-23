@@ -61,7 +61,7 @@ install_systemctl() {
     ${su_do} sed -i 's#User=eos#User='$(whoami)'#' ${service_config}
     ${su_do} cat ${service_config}
     ${su_do} systemctl daemon-reload
-    ${su_do} systemctl status ${service_name}
+    ${su_do} systemctl status ${service_name} -n10
 }
 
 install_all_systemctl() {
