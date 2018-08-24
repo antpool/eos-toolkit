@@ -10,11 +10,12 @@ import init_work_home
 
 init_work_home.init()
 from config.config import Config
-from utils.logger import logger
+from utils.logger import get_logger
 from utils.metric import Metric
 
 timestamp_pattern = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}'
 eosio_log_file = Config.get_log_file()
+logger = get_logger('eos_log_parser')
 
 
 class LogParser:
