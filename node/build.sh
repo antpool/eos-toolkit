@@ -72,6 +72,7 @@ is_execute() {
 check_tag() {
   go_eosio_home
   [ "${tag}" == "" ] && log "need tag." && exit 1
+  execute git checkout .
   execute git pull --tags 2>/dev/null
   current_tag=`git status | head -1|sed "s/.* //g"`
   log "current_tag: ${current_tag}"
