@@ -40,7 +40,7 @@ make_eos() {
   check_tag
   go_eosio_home
   clear_build_home
-  ${eosio_home}/eosio_build.sh
+  ${eosio_home}/eosio_build.sh -s EOS
   [ 0 != $? ] && log "eosio_build failed." && exit 1
   [ ! -d build ] && log "build not exists." && exit 1
   go_build_home
@@ -72,6 +72,7 @@ is_execute() {
 check_tag() {
   go_eosio_home
   [ "${tag}" == "" ] && log "need tag." && exit 1
+  execute git checkout .
   execute git pull --tags 2>/dev/null
   current_tag=`git status | head -1|sed "s/.* //g"`
   log "current_tag: ${current_tag}"

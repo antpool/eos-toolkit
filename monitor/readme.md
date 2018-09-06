@@ -20,6 +20,10 @@ python /path/eos-toolkit/monitor/bidname_status.py
 ```
 python /path/eos-toolkit/monitor/bp_block_monitor.py
 ```
+- bp blacklist monitor
+```
+/path/eos-toolkit/monitor/blacklist_monitor.sh
+```
 - log parser and metrics(trxs,latency) collect
 ```
 1) change config eos_log_file

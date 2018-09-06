@@ -9,6 +9,7 @@
     - [bp status(rank,votes,reward,claim_time) monitor](monitor)
     - [bidname status monitor](monitor)
     - [bp produce monitor](monitor)
+    - [bp blacklist monitor](monitor)
 - Claim
     - [auto claim](claim)
 - Log Collect

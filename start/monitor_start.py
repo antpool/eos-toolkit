@@ -30,6 +30,11 @@ def auto_restart():
     subprocess.call(restart_command)
 
 
+def blacklist_monitor():
+    blacklist_monitor_command = str(work_home) + '/monitor/blacklist_monitor.sh'
+    subprocess.call(blacklist_monitor_command)
+
+
 def init_jobs():
     enable, cron = MonitorConfig.node_monitor()
     add_job(monitor.node_monitor.main, enable, cron, 'node_monitor')
@@ -51,6 +56,9 @@ def init_jobs():
 
     enable, cron = MonitorConfig.auto_restart()
     add_job(auto_restart, enable, cron, 'auto_restart')
+
+    enable, cron = MonitorConfig.blacklist_monitor()
+    add_job(blacklist_monitor, enable, cron, 'blacklist_monitor')
 
 
 def add_job(func, enable, cron, id):
