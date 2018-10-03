@@ -11,6 +11,7 @@ init_config() {
     wallet_name=$(${get_config} "wallet_name")
     wallet_pwd=$(${get_config} "wallet_password")
     wallet_api=$(${get_config} "wallet_api")
+    claim_permission=$(${get_config} "claim_permission")
     eos_client=$(${get_config} "eos_client")
     cleos="${eos_client} -u ${api} --wallet-url=${wallet_api}"
 
@@ -153,7 +154,7 @@ claim_success() {
 
 claim_rewards() {
     unlock_wallet
-    claim_result=$(${cleos} push action eosio claimrewards '{"owner":"'${bp_account}'"}' -p ${bp_account}@claimer 2>&1)
+    claim_result=$(${cleos} push action eosio claimrewards '{"owner":"'${bp_account}'"}' -p ${bp_account}@${claim_permission} 2>&1)
     if [ $? -gt 0 ];then
         # remove color code
         claim_result=$(echo "${claim_result}" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g")
