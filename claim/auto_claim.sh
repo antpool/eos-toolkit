@@ -30,12 +30,12 @@ init_config() {
 }
 
 log() {
-    ${logger} -m "$@"
+    ${logger} -m "${bp_account} $@"
 }
 
 notify() {
     log "$@"
-    ${notify_tool} -m "$@"
+    ${notify_tool} -m "${bp_account} $@"
 }
 
 unlock_wallet() {
