@@ -98,3 +98,16 @@ def get_ram_price(url=def_api, timeout=def_timeout):
     quote_balance = float(ram['quote']['balance'].split(' ')[0])
     base_balance = float(ram['base']['balance'].split(' ')[0])
     return quote_balance / base_balance * 1024
+
+
+def get_actions(account, pos=-1, offset=-50, url=def_api, timeout=def_timeout):
+    uri = "/v1/history/get_actions"
+    url = url + uri
+    data = """
+    {
+        "account_name": "%s",
+        "pos": %s,
+        "offset": %s
+    }
+    """ % (account, pos, offset)
+    return http.post('get_actions', url=url, data=data, timeout=timeout).json()['actions']
