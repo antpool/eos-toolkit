@@ -37,11 +37,13 @@ def get_logger(name=None):
     if file_enable:
         file_handler = TimedRotatingFileHandler(log_file, when='MIDNIGHT', backupCount=7)
         file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
+        if len(logger.handlers) == 0:
+            logger.addHandler(file_handler)
     if console_enable:
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)
-        logger.addHandler(console_handler)
+        if len(logger.handlers) <= 1:
+            logger.addHandler(console_handler)
     return logger
 
 
