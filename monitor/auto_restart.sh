@@ -25,6 +25,7 @@ init_config() {
     auto_restart_seconds=$(to_seconds ${auto_restart_config})
 
     cpu_percent_limit=$(${get_config} "cpu_percent_limit")
+    memory_percent_limit=$(${get_config} "memory_percent_limit")
     hostname=$(hostname)
 }
 
@@ -38,7 +39,6 @@ notify() {
 }
 
 restart() {
-    notify "${hostname} last ${auto_restart_config} cpu_percent is ${average}, start restart(${restart_command})..."
     ${restart_command}
     if [ $? -eq 0 ]; then
         notify "${hostname} restart success"
@@ -48,26 +48,48 @@ restart() {
 }
 
 check_cpu_percent() {
+    cpu_percent=`grep eos_cpu_percent ${monitor_log}|tail -${lines_count}|grep -Eo "[0-9]+\.[0-9]+"| xargs | sed 's/ /+/g'`
+    if [ "${cpu_percent}" == "" ];then
+        log "not found cpu monitor data"
+        return
+    fi
+    average=`echo "(${cpu_percent})/${lines_count}"|bc`
+    log "${hostname} last ${auto_restart_config} cpu_percent is ${average}"
+    if [ `echo "${average}>${cpu_percent_limit}"|bc` -eq 1 ]; then
+        notify "${hostname} last ${auto_restart_config} cpu_percent is ${average}, start restart(${restart_command})..."
+        restart
+        exit
+    fi
+}
+
+check_memory_percent() {
+    memory_percent=`grep eos_memory_percent ${monitor_log}|tail -${lines_count}|grep -Eo "[0-9]+\.[0-9]+"| xargs | sed 's/ /+/g'`
+    if [ "${memory_percent}" == "" ];then
+        log "not found memory monitor data"
+        return
+    fi
+    average=`echo "(${memory_percent})/${lines_count}"|bc`
+    log "${hostname} last ${auto_restart_config} memory_percent is ${average}"
+    if [ `echo "${average}>${memory_percent_limit}"|bc` -eq 1 ]; then
+        notify "${hostname} last ${auto_restart_config} memory_percent is ${average}, start restart(${restart_command})..."
+        restart
+        exit
+    fi
+}
+
+check() {
     lines_count=`echo "${auto_restart_seconds}/${process_monitor_seconds}"|bc`
     if [ ${lines_count} -eq 0 ];then
         log "auto restart interval too small"
         exit 1
     fi
-    cpu_percent=`grep eos_cpu_percent ${monitor_log}|tail -${lines_count}|grep -Eo "[0-9]+\.[0-9]+"| xargs | sed 's/ /+/g'`
-    if [ "${cpu_percent}" == "" ];then
-        log "not found cpu monitor data"
-        exit 1
-    fi
-    average=`echo "(${cpu_percent})/${lines_count}"|bc`
-    log "${hostname} last ${auto_restart_config} cpu_percent is ${average}"
-    if [ `echo "${average}>${cpu_percent_limit}"|bc` -eq 1 ]; then
-        restart
-    fi
+    check_cpu_percent
+    check_memory_percent
 }
 
 main() {
     init_config
-    check_cpu_percent
+    check
 }
 
 main
