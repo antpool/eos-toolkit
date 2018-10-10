@@ -1,17 +1,19 @@
 #!/bin/bash
 
 seconds=86400
+bp_account=""
+claim_permission=""
 
 init_config() {
     claim_home=$(cd `dirname $0`;pwd)
     work_home=$(cd ${claim_home};cd ../;pwd)
     get_config="${work_home}/config/config.sh"
     api=$(${get_config} "local_api")
-    bp_account=$(${get_config} "bp_account")
+    [ "${bp_account}" == "" ] && bp_account=$(${get_config} "bp_account")
     wallet_name=$(${get_config} "wallet_name")
     wallet_pwd=$(${get_config} "wallet_password")
     wallet_api=$(${get_config} "wallet_api")
-    claim_permission=$(${get_config} "claim_permission")
+    [ "${claim_permission}" == "" ] && claim_permission=$(${get_config} "claim_permission")
     eos_client=$(${get_config} "eos_client")
     cleos="${eos_client} -u ${api} --wallet-url=${wallet_api}"
 
@@ -30,12 +32,12 @@ init_config() {
 }
 
 log() {
-    ${logger} -m "${bp_account} $@"
+    ${logger} -m "${bp_account}@${claim_permission} $@"
 }
 
 notify() {
     log "$@"
-    ${notify_tool} -m "${bp_account} $@"
+    ${notify_tool} -m "${bp_account}@${claim_permission} $@"
 }
 
 unlock_wallet() {
@@ -179,7 +181,9 @@ process_claim() {
 }
 
 main() {
+    bp_account=$1
+    claim_permission=$2
     process_claim
 }
 
-main
+main $@
