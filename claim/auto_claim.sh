@@ -22,7 +22,7 @@ init_config() {
     last_claim_check_cache_key="${bp_account}_claim_check_count"
     can_claim=false
     notify_tool="python ${work_home}/utils/notify.py"
-    reward_tool="python ${work_home}/monitor/bp_status_monitor.py"
+    reward_tool="python ${work_home}/monitor/bp_status_monitor.py -bp ${bp_account} -u ${api} -r rewards"
     logger="python ${work_home}/utils/logger.py"
     if [ ! -f "${eos_client}" ] || [ "${wallet_pwd}" == "" ]; then
         log "please check client or wallet_pwd config"
@@ -54,6 +54,7 @@ lock_wallet() {
 }
 
 get_balance() {
+    sleep 3s
     balance="`${cleos} get currency balance eosio.token ${bp_account}`"
 }
 
@@ -135,7 +136,7 @@ check_claim_time() {
 }
 
 check_rewards() {
-    reward_pay=`${reward_tool} -r "rewards"`
+    reward_pay=`${reward_tool}`
     if [ "${reward_pay}" == "" ]; then
         log "query reward error"
         exit 1
