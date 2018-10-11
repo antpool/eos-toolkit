@@ -25,7 +25,7 @@ init_config() {
     reward_tool="python ${work_home}/monitor/bp_status_monitor.py -bp ${bp_account} -u ${api} -r rewards"
     logger="python ${work_home}/utils/logger.py"
     if [ ! -f "${eos_client}" ] || [ "${wallet_pwd}" == "" ]; then
-        log "please check client or wallet_pwd config"
+        notify "please check client or wallet_pwd config"
         exit 0
     fi
     init_cache
