@@ -138,7 +138,7 @@ check_claim_time() {
 check_rewards() {
     reward_pay=`${reward_tool}`
     if [ "${reward_pay}" == "" ]; then
-        log "query reward error"
+        notify "query reward error"
         exit 1
     elif [ $(echo "100.0>${reward_pay}"|bc) -eq 1 ]; then
         log "${reward_pay} reward not enough"
