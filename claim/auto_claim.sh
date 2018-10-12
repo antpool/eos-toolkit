@@ -1,17 +1,19 @@
 #!/bin/bash
 
 seconds=86400
+bp_account=""
+claim_permission=""
 
 init_config() {
     claim_home=$(cd `dirname $0`;pwd)
     work_home=$(cd ${claim_home};cd ../;pwd)
     get_config="${work_home}/config/config.sh"
     api=$(${get_config} "local_api")
-    bp_account=$(${get_config} "bp_account")
+    [ "${bp_account}" == "" ] && bp_account=$(${get_config} "bp_account")
     wallet_name=$(${get_config} "wallet_name")
     wallet_pwd=$(${get_config} "wallet_password")
     wallet_api=$(${get_config} "wallet_api")
-    claim_permission=$(${get_config} "claim_permission")
+    [ "${claim_permission}" == "" ] && claim_permission=$(${get_config} "claim_permission")
     eos_client=$(${get_config} "eos_client")
     cleos="${eos_client} -u ${api} --wallet-url=${wallet_api}"
 
@@ -20,22 +22,22 @@ init_config() {
     last_claim_check_cache_key="${bp_account}_claim_check_count"
     can_claim=false
     notify_tool="python ${work_home}/utils/notify.py"
-    reward_tool="python ${work_home}/monitor/bp_status_monitor.py"
+    reward_tool="python ${work_home}/monitor/bp_status_monitor.py -bp ${bp_account} -u ${api} -r rewards"
     logger="python ${work_home}/utils/logger.py"
     if [ ! -f "${eos_client}" ] || [ "${wallet_pwd}" == "" ]; then
-        log "please check client or wallet_pwd config"
+        notify "please check client or wallet_pwd config"
         exit 0
     fi
     init_cache
 }
 
 log() {
-    ${logger} -m "${bp_account} $@"
+    ${logger} -m "${bp_account}@${claim_permission} $@"
 }
 
 notify() {
     log "$@"
-    ${notify_tool} -m "${bp_account} $@"
+    ${notify_tool} -m "${bp_account}@${claim_permission} $@"
 }
 
 unlock_wallet() {
@@ -52,6 +54,7 @@ lock_wallet() {
 }
 
 get_balance() {
+    sleep 3s
     balance="`${cleos} get currency balance eosio.token ${bp_account}`"
 }
 
@@ -133,9 +136,9 @@ check_claim_time() {
 }
 
 check_rewards() {
-    reward_pay=`${reward_tool} -r "rewards"`
+    reward_pay=`${reward_tool}`
     if [ "${reward_pay}" == "" ]; then
-        log "query reward error"
+        notify "query reward error"
         exit 1
     elif [ $(echo "100.0>${reward_pay}"|bc) -eq 1 ]; then
         log "${reward_pay} reward not enough"
@@ -179,7 +182,9 @@ process_claim() {
 }
 
 main() {
+    bp_account=$1
+    claim_permission=$2
     process_claim
 }
 
-main
+main $@
