@@ -81,6 +81,7 @@ class MultiprocessHandler(logging.FileHandler):
         prefix = self.prefix + '.'
         plen = len(prefix)
         for fileName in fileNames:
+            fileName = dirName + "/" + fileName
             if fileName[:plen] == prefix:
                 suffix = fileName[plen:]
                 if re.compile(self.extMath).match(suffix):
