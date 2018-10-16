@@ -102,7 +102,7 @@ def check_and_download_chunk(index, chunk_hash, empty_size):
 
 def download(file_type, filename):
     response = requests.get("%s/query/%s/%s" % (base_url, file_type, filename))
-    if response.text == "false":
+    if response.text == "False":
         return
     if file_type == type_chunks:
         backup_file = '%s/%s' % (chunks_home, filename)

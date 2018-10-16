@@ -210,3 +210,11 @@ class BackupConfig:
     @staticmethod
     def get_backup_server():
         return cf.get(BackupConfig.section, "backup_server")
+
+    @staticmethod
+    def get_backup_host():
+        return cf.get(BackupConfig.section, "backup_server_host")
+
+    @staticmethod
+    def get_backup_port():
+        return cf.get(BackupConfig.section, "backup_server_port")

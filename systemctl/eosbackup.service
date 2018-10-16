@@ -1,0 +1,11 @@
+[Unit]
+Description=eos-backup-server
+
+[Service]
+User=eos
+ExecStart=python /path/eos-toolkit/backup/backup_server.py
+Restart=always
+RestartSec=300s
+
+[Install]
+WantedBy=multi-user.target
