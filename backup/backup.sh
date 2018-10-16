@@ -1,7 +1,6 @@
 #!/bin/bash
 
 pitreos="/usr/local/go/bin/pitreos"
-local_backup_server="http://127.0.0.1:8080"
 
 init_config() {
     backup_home=$(cd `dirname $0`;pwd)
@@ -53,15 +52,10 @@ backup() {
     ${start_command}
 }
 
-update_cache() {
-    curl "${local_backup_server}/api/backup/refresh/cache"
-}
-
 main() {
     init_config
     check_api "start"
     backup
-    update_cache
     sleep 60s
     check_api "end"
 }
