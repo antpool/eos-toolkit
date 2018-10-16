@@ -64,6 +64,7 @@ def fetch_backup():
             empty_size = check_and_download_chunk('%s/%s' % (i, list_size), chunk_hash, empty_size)
             i += 1
         logger.info('fetch %s backup success, skipped %s empty pieces' % (backup_file, empty_size))
+    logger.info('fetch %s finished' % backup_index)
 
 
 def handle_chunk(chunk):
