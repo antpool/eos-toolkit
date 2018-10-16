@@ -9,7 +9,7 @@ import init_work_home
 
 init_work_home.init()
 from config.config import BackupConfig
-from utils.logger import logger, monitor_log
+from utils.logger import monitor_log
 
 logging.basicConfig(filename=monitor_log, level=logging.DEBUG)
 backup_home = BackupConfig.get_backup_home()
@@ -62,9 +62,10 @@ def query_list_latest():
 def query_index_list():
     try:
         indexes = os.listdir(path('indexes'))
-        return indexes.sort(compare)
+        indexes.sort(compare)
+        return indexes
     except Exception as e:
-        logger.error('query_index_list error: %s', e)
+        app.logger.error('query_index_list error: %s', e)
         return list()
 
 
