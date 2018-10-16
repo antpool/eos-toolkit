@@ -198,3 +198,15 @@ class HttpConfig:
     @staticmethod
     def default_time_out_sec():
         return cf.getfloat(HttpConfig.section, "def_timeout_sec")
+
+
+class BackupConfig:
+    section = "backup"
+
+    @staticmethod
+    def get_backup_home():
+        return cf.get(BackupConfig.section, "backup_home")
+
+    @staticmethod
+    def get_backup_server():
+        return cf.get(BackupConfig.section, "backup_server")
