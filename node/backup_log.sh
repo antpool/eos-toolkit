@@ -16,7 +16,7 @@ log() {
 }
 
 clear_history_log() {
-    find_history_command="find ${log_home} -ctime +30 -type f -name '$1*'"
+    find_history_command="find ${log_home} -ctime +30 -type f -name '$1_*'"
     history_log=$(${find_history_command})
     if [ "${history_log}" == "" ];then
         return
