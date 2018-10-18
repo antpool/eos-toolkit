@@ -67,7 +67,7 @@ backup() {
     if [ $? != 0 ]; then
         notify "restart for backup failed"
     fi
-    clear_backup_statust
+    clear_backup_status
 }
 
 main() {
