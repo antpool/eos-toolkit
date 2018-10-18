@@ -14,7 +14,7 @@ init_config() {
     start_command="${work_home}/node/start.sh"
 
     default_log=$(${get_config} "monitor_log_file")
-    backup_status="${backup_home}/backup_status"
+    backup_status="${backup_home}/$(${get_config} 'backup_status_file')"
 
     log_file="${eos_home}/logs/${default_log}"
     notify_tool="python ${work_home}/utils/notify.py"
