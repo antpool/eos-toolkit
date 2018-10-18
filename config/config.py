@@ -218,3 +218,11 @@ class BackupConfig:
     @staticmethod
     def get_backup_port():
         return cf.get(BackupConfig.section, "backup_server_port")
+
+    @staticmethod
+    def get_backup_status():
+        return cf.get(BackupConfig.section, "backup_status_file")
+
+    @staticmethod
+    def get_max_sec():
+        return cf.getint(BackupConfig.section, "backup_max_second")

@@ -2,19 +2,22 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os
 
 import psutil
 
 import init_work_home
 
-init_work_home.init()
-from config.config import Config
+work_home = init_work_home.init()
+from config.config import Config, BackupConfig
 from utils.logger import logger
 from utils.metric import Metric
 
 pname = Config.get_process_name()
 memory_total_bytes = float(psutil.virtual_memory().total)
 memory_total_gb = memory_total_bytes / 1024 / 1024 / 1024
+
+backup_status = '%s/backup/%s' % (work_home, BackupConfig.get_backup_status())
 
 
 class Monitor:
@@ -64,6 +67,9 @@ class Monitor:
 
     def monitor(self):
         try:
+            if os.path.isfile(backup_status):
+                logger.info('node is backup, skipped process monitor')
+                return
             self.init_process()
             self.cpu()
             self.memory()

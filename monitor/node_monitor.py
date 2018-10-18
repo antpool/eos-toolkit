@@ -2,15 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import os
 import random
 import socket
+import time
 
 import init_work_home
 
-init_work_home.init()
+work_home = init_work_home.init()
 from utils.notify import Notify
 from utils.metric import Metric
-from config.config import Config
+from config.config import Config, BackupConfig
 from utils.logger import logger
 from api import eos_api
 
@@ -20,9 +22,10 @@ remote_api_list = Config.get_api_list()
 remote_api_size = len(remote_api_list)
 http_time_out_sec = 2.0 / (remote_api_size + 2)
 hostname = '【%s】' % socket.gethostname()
+backup_status = '%s/backup/%s' % (work_home, BackupConfig.get_backup_status())
 
 
-def log_and_notify(*args):
+def notify(*args):
     Notify.notify_error(*args)
 
 
@@ -32,7 +35,7 @@ def diff_record_or_warning(local_block_num, remote_block_num, other_api):
     logger.info('%s, %s', hostname, msg)
     Metric.metric(Metric.height_diff, diff, version=local_server_version)
     if abs(diff) >= max_height_diff:
-        log_and_notify(hostname, msg)
+        notify(hostname, msg)
 
 
 def get_chain_info_from_other():
@@ -74,11 +77,25 @@ def check_height():
 
 
 def check_node_alive(url):
+    if os.path.isfile(backup_status):
+        backup_cost_time = int(time.time()) - get_last_backup_time()
+        if backup_cost_time >= BackupConfig.get_max_sec():
+            msg = 'node backup for too long(%sm), please check' % (backup_cost_time / 60)
+            logger.info(msg)
+            notify(msg)
+            return False
+        logger.info('node is backup, skipped node check')
+        return False
     is_alive, msg = get_chain_info_from_node(url)
     if not is_alive:
-        log_and_notify(hostname, 'node is need check', msg)
+        notify(hostname, 'node is need check', msg)
         return False
     return True
+
+
+def get_last_backup_time():
+    with open(backup_status, 'r') as f:
+        return int(f.read().rstrip('\n'))
 
 
 def usage():

@@ -20,6 +20,7 @@ init_config() {
     get_config="${work_home}/config/config.sh"
 
     api=$(${get_config} "local_api")
+    backup_status="${work_home}/backup/$(${get_config} "backup_status_file")"
     process_monitor_config=$(${get_config} "process_monitor"|grep -Eo "[0-9]+.*")
     auto_restart_config=$(${get_config} "auto_restart"|grep -Eo "[0-9]+.*")
     process_monitor_seconds=$(to_seconds ${process_monitor_config})
@@ -34,16 +35,23 @@ log() {
     ${logger} -m "$@"
 }
 
+log_exit() {
+    log "$@"
+    exit 1
+}
+
 notify() {
     log "$@"
     ${notify_tool} "$@"
 }
 
 check_node_status() {
+    if [ -f "${backup_status}" ];then
+        log_exit "node is backup, not need restart"
+    fi
     code=`curl -I -m 10 -o /dev/null -s -w %{http_code} "${api}/v1/chain/get_info"`
     if [ "${code}" != 200 ];then
-        log "node is stopped, not need restart"
-        exit 1
+        log_exit "node is stopped, not need restart"
     fi
 }
 
@@ -90,8 +98,7 @@ check() {
     check_node_status
     lines_count=`echo "${auto_restart_seconds}/${process_monitor_seconds}"|bc`
     if [ ${lines_count} -eq 0 ];then
-        log "auto restart interval too small"
-        exit 1
+        log_exit "auto restart interval too small"
     fi
     check_cpu_percent
     check_memory_percent
