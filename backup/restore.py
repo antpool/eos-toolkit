@@ -11,6 +11,7 @@ import init_work_home
 init_work_home.init()
 from config.config import BackupConfig
 from utils.logger import logger
+from utils.notify import Notify
 
 backup_index = ''
 
@@ -128,5 +129,10 @@ def usage():
 
 if __name__ == '__main__':
     usage()
-    check_backup_home()
-    fetch_backup()
+    try:
+        check_backup_home()
+        fetch_backup()
+    except Exception as e:
+        msg = 'backup auto restore error\n %s' % str(e)
+        logger.error(msg)
+        Notify.notify_error(msg)
