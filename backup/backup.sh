@@ -59,6 +59,7 @@ backup() {
     if [ $? == 0 ]; then
         log "backup success"
         clear_backup_status
+        exit 0
     else
         ${start_command}
         notify "backup failed."
