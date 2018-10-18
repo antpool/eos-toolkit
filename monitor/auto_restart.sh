@@ -19,6 +19,7 @@ init_config() {
     restart_command="${work_home}/node/start.sh"
     get_config="${work_home}/config/config.sh"
 
+    api=$(${get_config} "local_api")
     process_monitor_config=$(${get_config} "process_monitor"|grep -Eo "[0-9]+.*")
     auto_restart_config=$(${get_config} "auto_restart"|grep -Eo "[0-9]+.*")
     process_monitor_seconds=$(to_seconds ${process_monitor_config})
@@ -36,6 +37,14 @@ log() {
 notify() {
     log "$@"
     ${notify_tool} "$@"
+}
+
+check_node_status() {
+    code=`curl -I -m 10 -o /dev/null -s -w %{http_code} "${api}/v1/chain/get_info"`
+    if [ "${code}" != 200 ];then
+        log "node is stopped, not need restart"
+        exit 1
+    fi
 }
 
 restart() {
@@ -78,6 +87,7 @@ check_memory_percent() {
 }
 
 check() {
+    check_node_status
     lines_count=`echo "${auto_restart_seconds}/${process_monitor_seconds}"|bc`
     if [ ${lines_count} -eq 0 ];then
         log "auto restart interval too small"
