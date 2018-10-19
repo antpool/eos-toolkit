@@ -1,0 +1,7 @@
+#!/bin/bash
+
+current_home=$(cd `dirname $0`;pwd)
+. ${current_home}/check $@
+[ $? != 0 ] && exit
+
+${RESTART_COMMAND}

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+region=$1
+server=$2
+if [ "" == "${region}" ] || [ "" == "${server}" ];then
+  exit 1
+fi
+match=`hostname | grep "${region}-${server}"`
+[ "${match}" == "" ] && exit 1
+
+real_path=$(readlink -f $0)
+current_home=$(cd `dirname ${real_path}`;pwd)
+
+work_home=$(cd ${current_home};cd ../;pwd)
+get_config="${work_home}/config/config.sh"
+eos_home=$(${get_config} "eos_home")
+
+export EOS_LOG="${eos_home}/logs/stderr.txt"
+export RESTART_COMMAND="${work_home}/node/start.sh"

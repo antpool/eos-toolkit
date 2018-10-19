@@ -1,0 +1,8 @@
+#!/bin/bash
+
+current_home=$(cd `dirname $0`;pwd)
+. ${current_home}/check $@
+[ $? != 0 ] && exit
+
+chain_info=`curl -s http://127.0.0.1:8888/v1/chain/get_info | jq '.'`
+echo "$(hostname) --> ${chain_info}"
