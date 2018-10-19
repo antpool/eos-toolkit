@@ -4,4 +4,5 @@ current_home=$(cd `dirname $0`;pwd)
 . ${current_home}/check $@
 [ $? != 0 ] && exit
 
-echo `${RESTART_COMMAND}`
+pitreos="/usr/local/go/bin/pitreos"
+${pitreos} list

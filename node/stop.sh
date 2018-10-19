@@ -8,11 +8,10 @@ pid_file="${eos_home}/logs/nodeos.pid"
 
 if [ -f "${pid_file}" ]; then
     pid=$(cat "${pid_file}")
-    echo ${pid}
     kill ${pid}
     rm -r "${pid_file}"
 
-    echo -ne "Stopping Nodeos"
+    echo -ne "Stopping Nodeos(${pid})"
 
     while true; do
         [ ! -d "/proc/${pid}/fd" ] && break
