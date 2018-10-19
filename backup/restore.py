@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import argparse
 import gzip
 import os
 import urllib
+import socket
 
 import requests
 import yaml
@@ -21,6 +25,7 @@ type_indexes = 'indexes'
 type_chunks = 'chunks'
 indexes_home = backup_home + '/' + type_indexes
 chunks_home = backup_home + '/' + type_chunks
+hostname = '【%s】' % socket.gethostname()
 
 
 def check_backup_home():
@@ -72,6 +77,8 @@ def handle_chunk(chunk):
     pieces = chunk['chunks']
     backup_file = chunk['filename']
     chunk_hash_list = list()
+    if pieces is None:
+        return backup_file, chunk_hash_list
     for piece in pieces:
         try:
             chunk_hash_list.append(piece['contentSHA'])
@@ -133,6 +140,6 @@ if __name__ == '__main__':
         check_backup_home()
         fetch_backup()
     except Exception as e:
-        msg = 'backup auto restore error\n %s' % str(e)
+        msg = '%s\nbackup auto restore error\n %s' % (hostname, str(e))
         logger.error(msg)
         Notify.notify_error(msg)
