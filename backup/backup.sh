@@ -29,8 +29,6 @@ log() {
 notify() {
     log "$@"
     ${notify_tool} -m "[[ ${hostname} ]] \n$@"
-    clear_backup_status
-    exit 1
 }
 
 check_api() {
@@ -54,21 +52,21 @@ backup() {
     ${stop_command}
     if [ $? != 0 ]; then
         notify "stop for backup failed"
+        clear_backup_status
+        exit 1
     fi
     ${pitreos} backup ${data_home} 2>&1 >> ${log_file}
     if [ $? == 0 ]; then
         log "backup success"
-        clear_backup_status
-        exit 0
     else
-        ${start_command}
         notify "backup failed."
     fi
     ${start_command}
     if [ $? != 0 ]; then
         notify "restart for backup failed"
+    else
+        clear_backup_status
     fi
-    clear_backup_status
 }
 
 main() {
