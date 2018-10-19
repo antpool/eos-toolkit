@@ -53,6 +53,10 @@ class Config:
     def get_log_file():
         return cf.get(Config.section, "eos_log_file")
 
+    @staticmethod
+    def get_backup_days():
+        return cf.getint(Config.section, "log_backup_days")
+
 
 class MetricConfig:
     section = "metrics"

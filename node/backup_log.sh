@@ -4,6 +4,7 @@ current_home=$(cd `dirname $0`;pwd)
 work_home=$(cd ${current_home};cd ../;pwd)
 get_config="${work_home}/config/config.sh"
 eos_home=$(${get_config} "eos_home")
+backup_days=$(${get_config} "log_backup_days")
 log_home="${eos_home}/logs"
 logger="python ${work_home}/utils/logger.py"
 
@@ -16,7 +17,7 @@ log() {
 }
 
 clear_history_log() {
-    find_history_command="find ${log_home} -ctime +30 -type f -name '$1_*'"
+    find_history_command="find ${log_home} -ctime +${backup_days} -type f -name '$1_*'"
     history_log=$(${find_history_command})
     if [ "${history_log}" == "" ];then
         return
