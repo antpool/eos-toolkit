@@ -4,7 +4,7 @@ current_home=$(cd `dirname $0`;pwd)
 . ${current_home}/check $@
 [ $? != 0 ] && exit
 
-if [ "" == "$3" ] || [ "$(egrep -v '[0-9]')" != "" ]; then
+if [ "" == "$3" ] || [ "$(echo "$3"|egrep -v '^[0-9]+$')" != "" ]; then
     lines=10
 else
     lines=$3
