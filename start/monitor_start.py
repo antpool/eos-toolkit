@@ -40,9 +40,9 @@ def backup_job_init():
     if not BackupConfig.enable():
         return
     if BackupConfig.is_client():
-        backup_interval_hour = '*/%s' % BackupConfig.get_backup_interval()
-    else:
         backup_interval_hour = '*/%s' % (BackupConfig.get_backup_interval() + 1)
+    else:
+        backup_interval_hour = '*/%s' % BackupConfig.get_backup_interval()
     sched.add_job(backup.restore.main, 'cron', hour=backup_interval_hour, minute=2, second=0, id='backup_restore')
 
 
