@@ -44,12 +44,11 @@ def data_backup_handler():
 def backup_job_init():
     if not BackupConfig.enable():
         return
+    backup_interval_hour = '*/%s' % BackupConfig.get_backup_interval()
     if BackupConfig.is_client():
-        backup_interval_hour = '*/%s' % (BackupConfig.get_backup_interval() + 1)
         sched.add_job(backup.restore.main, 'cron', hour=backup_interval_hour, minute=2, second=0, id='backup_restore')
     else:
-        backup_interval_hour = '*/%s' % (BackupConfig.get_backup_interval())
-        sched.add_job(data_backup_handler, 'cron', hour=backup_interval_hour, minute=2, second=0, id='backup')
+        sched.add_job(data_backup_handler, 'cron', hour=backup_interval_hour, minute=59, second=0, id='backup')
 
 
 def blacklist_monitor():
