@@ -39,6 +39,7 @@ check_api() {
 }
 
 init_backup_status() {
+    log "backup start...."
     echo $(date "+%s") > ${backup_status}
 }
 
