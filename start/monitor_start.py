@@ -9,13 +9,14 @@ import init_work_home
 
 work_home = init_work_home.init()
 
-from config.config import MonitorConfig
+from config.config import MonitorConfig, BackupConfig
 from utils.logger import logger
 import monitor.node_monitor
 import monitor.eos_process_monitor
 import monitor.bp_status_monitor
 import monitor.bp_block_monitor
 import monitor.bidname_status
+import backup.restore
 
 sched = BlockingScheduler()
 
@@ -28,6 +29,21 @@ def auto_claim():
 def auto_restart():
     restart_command = str(work_home) + '/monitor/auto_restart.sh'
     subprocess.call(restart_command)
+
+
+def eos_log_handler():
+    backup_command = str(work_home) + '/node/backup_log.sh'
+    subprocess.call(backup_command)
+
+
+def backup_job_init():
+    if not BackupConfig.enable():
+        return
+    if BackupConfig.is_client():
+        backup_interval_hour = '*/%s' % BackupConfig.get_backup_interval()
+    else:
+        backup_interval_hour = '*/%s' % (BackupConfig.get_backup_interval() + 1)
+    sched.add_job(backup.restore.main, 'cron', hour=backup_interval_hour, minute=2, second=0, id='backup_restore')
 
 
 def blacklist_monitor():
@@ -59,6 +75,9 @@ def init_jobs():
 
     enable, cron = MonitorConfig.blacklist_monitor()
     add_job(blacklist_monitor, enable, cron, 'blacklist_monitor')
+
+    sched.add_job(eos_log_handler, 'cron', hour=0, minute=0, second=5, id='eos_log_handler')
+    backup_job_init()
 
 
 def add_job(func, enable, cron, id):

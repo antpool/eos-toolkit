@@ -17,3 +17,4 @@ eos_home=$(${get_config} "eos_home")
 
 export EOS_LOG="${eos_home}/logs/stderr.txt"
 export RESTART_COMMAND="${work_home}/node/start.sh"
+export STOP_COMMAND="${work_home}/node/stop.sh"

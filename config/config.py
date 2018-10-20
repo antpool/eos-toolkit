@@ -208,6 +208,10 @@ class BackupConfig:
     section = "backup"
 
     @staticmethod
+    def enable():
+        return cf.getboolean(BackupConfig.section, "backup_enable")
+
+    @staticmethod
     def get_backup_home():
         return cf.get(BackupConfig.section, "backup_home")
 
@@ -230,3 +234,11 @@ class BackupConfig:
     @staticmethod
     def get_max_sec():
         return cf.getint(BackupConfig.section, "backup_max_second")
+
+    @staticmethod
+    def get_backup_interval():
+        return cf.getint(BackupConfig.section, "backup_interval")
+
+    @staticmethod
+    def is_client():
+        return "client" == cf.get(BackupConfig.section, "backup_node_type")

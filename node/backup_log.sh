@@ -10,7 +10,7 @@ logger="python ${work_home}/utils/logger.py"
 
 stdout_log="stdout.txt"
 stderr_log="stderr.txt"
-suffix=$(date "+%Y%m%d_%H%M")
+suffix=$(date -d '1 days ago' "+%F")
 
 log() {
     ${logger} -m "$@"
@@ -34,6 +34,7 @@ backup_log() {
     log_file="${log_home}/$1"
     if [ -f "${log_file}" ] && [ -s "${log_file}" ];then
         cp -f ${log_file} "${log_file}_${suffix}"
+        echo > ${log_file}
     fi
 }
 

@@ -4,8 +4,8 @@
 import argparse
 import gzip
 import os
-import urllib
 import socket
+import urllib
 
 import requests
 import yaml
@@ -126,6 +126,16 @@ def download_url(file_type, filename):
     return '%s/download/%s/%s' % (base_url, file_type, filename)
 
 
+def main():
+    try:
+        check_backup_home()
+        fetch_backup()
+    except Exception as e:
+        msg = '%s\nbackup auto restore error\n %s' % (hostname, str(e))
+        logger.error(msg)
+        Notify.notify_error(msg)
+
+
 def usage():
     global backup_index
     parser = argparse.ArgumentParser(description='eos backup download tool.')
@@ -136,10 +146,4 @@ def usage():
 
 if __name__ == '__main__':
     usage()
-    try:
-        check_backup_home()
-        fetch_backup()
-    except Exception as e:
-        msg = '%s\nbackup auto restore error\n %s' % (hostname, str(e))
-        logger.error(msg)
-        Notify.notify_error(msg)
+    main()
