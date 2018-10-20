@@ -10,7 +10,7 @@ import init_work_home
 work_home = init_work_home.init()
 
 from config.config import MonitorConfig, BackupConfig
-from utils.logger import logger
+from utils.logger import logger, monitor_log
 import monitor.node_monitor
 import monitor.eos_process_monitor
 import monitor.bp_status_monitor
@@ -36,14 +36,20 @@ def eos_log_handler():
     subprocess.call(backup_command)
 
 
+def backup_handler():
+    backup_command = str(work_home) + '/backup/backup.sh 2>&1 >> ' + monitor_log
+    subprocess.call(backup_command)
+
+
 def backup_job_init():
     if not BackupConfig.enable():
         return
     if BackupConfig.is_client():
         backup_interval_hour = '*/%s' % (BackupConfig.get_backup_interval() + 1)
+        sched.add_job(backup.restore.main, 'cron', hour=backup_interval_hour, minute=2, second=0, id='backup_restore')
     else:
-        backup_interval_hour = '*/%s' % BackupConfig.get_backup_interval()
-    sched.add_job(backup.restore.main, 'cron', hour=backup_interval_hour, minute=2, second=0, id='backup_restore')
+        backup_interval_hour = '*/%s' % (BackupConfig.get_backup_interval())
+        sched.add_job(backup_handler, 'cron', hour=backup_interval_hour, minute=2, second=0, id='backup')
 
 
 def blacklist_monitor():
