@@ -82,7 +82,7 @@ def check_node_alive(url):
         if backup_cost_time >= BackupConfig.get_max_sec():
             msg = 'node backup for too long(%sm), please check' % (backup_cost_time / 60)
             logger.info(msg)
-            notify(msg)
+            notify(hostname, msg)
             return False
         logger.info('node is backup, skipped node check')
         return False
