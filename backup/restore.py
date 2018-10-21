@@ -127,6 +127,7 @@ def download_url(file_type, filename):
 
 
 def main():
+    global backup_index
     try:
         check_backup_home()
         fetch_backup()
@@ -134,6 +135,8 @@ def main():
         msg = '%s\nbackup auto restore error\n %s' % (hostname, str(e))
         logger.error(msg)
         Notify.notify_error(msg)
+    finally:
+        backup_index = None
 
 
 def usage():
