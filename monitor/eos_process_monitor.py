@@ -15,9 +15,14 @@ from utils.metric import Metric
 
 pname = Config.get_process_name()
 memory_total_bytes = float(psutil.virtual_memory().total)
-memory_total_gb = memory_total_bytes / 1024 / 1024 / 1024
-
 backup_status = '%s/backup/%s' % (work_home, BackupConfig.get_backup_status())
+
+
+def gb(value):
+    return round(float(value) / 1024 / 1024 / 1024, 4)
+
+
+memory_total_gb = gb(memory_total_bytes)
 
 
 class Monitor:
@@ -67,6 +72,7 @@ class Monitor:
 
     def monitor(self):
         try:
+            other_memory_info()
             if os.path.isfile(backup_status):
                 logger.info('node is backup, skipped process monitor')
                 return
@@ -76,6 +82,16 @@ class Monitor:
             self.connections()
         except Exception as e:
             logger.error('process monitor error: %s', e)
+
+
+def other_memory_info():
+    memory = psutil.virtual_memory()
+    cached = gb(memory.cached)
+    free = gb(memory.free)
+    available = gb(memory.available)
+    buffer = gb(memory.buffers)
+    logger.info('memory_info total:%s,cached:%s,free:%s,available:%s,buffer:%s'
+                % (memory_total_gb, cached, free, available, buffer))
 
 
 def usage():
