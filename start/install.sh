@@ -3,6 +3,7 @@
 service_list=(
     eosmonitor.service
     eoslogmonitor.service
+    eosbackup.service
 )
 
 py_package_list=(
@@ -10,6 +11,7 @@ py_package_list=(
     apscheduler
     psutil
     sh
+    flask
 )
 
 linux_command_list=(

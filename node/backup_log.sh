@@ -34,7 +34,7 @@ backup_log() {
     log_file="${log_home}/$1"
     if [ -f "${log_file}" ] && [ -s "${log_file}" ];then
         cp -f ${log_file} "${log_file}_${suffix}"
-        echo > ${log_file}
+        > ${log_file}
     fi
 }
 
