@@ -16,14 +16,17 @@ log() {
     ${logger} -m "$@"
 }
 
+get_history_log() {
+    find ${log_home} -ctime +${backup_days} -type f -wholename "${log_home}/$1_*"
+}
+
 clear_history_log() {
-    find_history_command="find ${log_home} -ctime +${backup_days} -type f -name '$1_*'"
-    history_log=$(${find_history_command})
+    history_log=`get_history_log $1`
     if [ "${history_log}" == "" ];then
         return
     fi
-    log "clear history log: $(${find_history_command})"
-    ${find_history_command} | xargs rm -f
+    log "clear history log: ${history_log}"
+    find ${log_home} -ctime +${backup_days} -type f -wholename "${log_home}/$1_*" | xargs rm -f
 }
 
 backup_log() {
