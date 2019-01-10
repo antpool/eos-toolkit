@@ -30,12 +30,23 @@ def notify(*args):
     Notify.notify_status(*args)
 
 
+def init_timezone():
+    global timezone
+    timezone = str(time.strftime("%z", time.localtime()))
+    timezone = timezone.replace("+", "")
+    timezone = timezone.replace("0", "")
+    if not timezone:
+        timezone = 0
+    else:
+        int(timezone)
+
+
 def timestamp(date):
     pattern = re.compile("\..*")
     result = re.sub(pattern, '', date)
     reformat_date = result.replace("T", " ")
-    secs = int(time.mktime(time.strptime(reformat_date, "%Y-%m-%d %H:%M:%S"))) * 1000000
-    return secs + 8 * 3600 * 1000000
+    millions_secs = int(time.mktime(time.strptime(reformat_date, "%Y-%m-%d %H:%M:%S"))) * 1000000
+    return millions_secs + int(timezone) * 3600 * 1000000
 
 
 def get_global_info():
@@ -137,6 +148,7 @@ def usage():
 def main():
     global rank
     try:
+        init_timezone()
         get_bp_account_info()
     except Exception as e:
         logger.error("occurs exception:%s" % e)
