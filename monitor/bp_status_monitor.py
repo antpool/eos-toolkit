@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*
 
 import argparse
+import re
 import time
 
 import init_work_home
@@ -29,6 +30,14 @@ def notify(*args):
     Notify.notify_status(*args)
 
 
+def timestamp(date):
+    pattern = re.compile("\..*")
+    result = re.sub(pattern, '', date)
+    reformat_date = result.replace("T", " ")
+    secs = int(time.mktime(time.strptime(reformat_date, "%Y-%m-%d %H:%M:%S"))) * 1000000
+    return secs + 8 * 3600 * 1000000
+
+
 def get_global_info():
     global total_vote_weight, pervote_bucket, total_unpaid_blocks, perblock_bucket, last_pervote_bucket_fill
     global_data = eos_api.get_global_info(url)
@@ -36,7 +45,7 @@ def get_global_info():
     pervote_bucket = int(global_data['pervote_bucket'])
     perblock_bucket = int(global_data['perblock_bucket'])
     total_unpaid_blocks = int(global_data['total_unpaid_blocks'])
-    last_pervote_bucket_fill = int(global_data['last_pervote_bucket_fill'])
+    last_pervote_bucket_fill = timestamp(global_data['last_pervote_bucket_fill'])
 
 
 def get_account_info():
@@ -50,7 +59,7 @@ def get_account_info():
     rank = int(producer['rank'])
     bp_vote_weight = float(producer['total_votes'])
     unpaid_blocks = int(producer['unpaid_blocks'])
-    last_claim_time = int(producer['last_claim_time'])
+    last_claim_time = timestamp(producer['last_claim_time'])
 
 
 def get_issue_token():
