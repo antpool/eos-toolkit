@@ -22,6 +22,7 @@ init_config() {
     last_claim_check_cache_key="${bp_account}_claim_check_count"
     can_claim=false
     notify_tool="python ${work_home}/utils/notify.py"
+    bp_query_tool="python ${work_home}/utils/bp_info.py -bp ${bp_account} -u ${api} -i last_claim_time"
     reward_tool="python ${work_home}/monitor/bp_status_monitor.py -bp ${bp_account} -u ${api} -r rewards"
     logger="python ${work_home}/utils/logger.py"
     if [ ! -f "${eos_client}" ] || [ "${wallet_pwd}" == "" ]; then
@@ -70,11 +71,9 @@ update_cache_file() {
 }
 
 update_claim_time_cache() {
-    bp_info=`curl -sX POST ${api}/v1/chain/get_producers -d '{"limit":"1","lower_bound":"'${bp_account}'","json":"true"}'|jq '.rows[0]'`
-    log "update claim cache: ${bp_info}"
-    bp_name=`echo "${bp_info}"|jq '.owner'|sed 's/"//g'`
-    [ "${bp_account}" != "${bp_name}" ] && log "${bp_account} get nothing." && return
-    last_claim_time=`echo "${bp_info}"|jq '.last_claim_time'|sed 's/"//g'`
+    last_claim_time=`${bp_query_tool}`
+    log "update claim cache: ${last_claim_time}"
+    [ "${last_claim_time}" == "" ] && log "${bp_account} get nothing." && return
     last_claim_time_sec=`echo "${last_claim_time}/1000000"|bc`
     update_cache_file ${last_claim_time_cache_key} ${last_claim_time_sec}
 }
