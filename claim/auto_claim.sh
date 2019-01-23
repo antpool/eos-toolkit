@@ -15,7 +15,11 @@ init_config() {
     wallet_api=$(${get_config} "wallet_api")
     [ "${claim_permission}" == "" ] && claim_permission=$(${get_config} "claim_permission")
     eos_client=$(${get_config} "eos_client")
-    cleos="${eos_client} -u ${api} --wallet-url=${wallet_api}"
+    symbol=$(${get_config} "symbol")
+    cleos="${eos_client} -u ${api}"
+    if [ "${wallet_api}" != "" ];then
+        cleos="${cleos} --wallet-url=${wallet_api}"
+    fi
 
     last_claim_time_cache="${claim_home}/claim_cache_info"
     last_claim_time_cache_key="${bp_account}_last_claim_time"
@@ -165,10 +169,10 @@ claim_rewards() {
         exit 1
     fi
     log "${claim_result}"
-    bpay=$(echo "${claim_result}" | grep "${bp_account} <= eosio.token::transfer" | grep "eosio.bpay" | grep -Eo "[0-9]+\.[0-9]+ EOS")
-    vpay=$(echo "${claim_result}" | grep "${bp_account} <= eosio.token::transfer" | grep "eosio.vpay" | grep -Eo "[0-9]+\.[0-9]+ EOS")
-    [ "" == "${vpay}" ] && vpay="0 EOS"
-    [ "" == "${bpay}" ] && bpay="0 EOS"
+    bpay=$(echo "${claim_result}" | grep "${bp_account} <= eosio.token::transfer" | grep "eosio.bpay" | grep -Eo "[0-9]+\.[0-9]+ ${symbol}")
+    vpay=$(echo "${claim_result}" | grep "${bp_account} <= eosio.token::transfer" | grep "eosio.vpay" | grep -Eo "[0-9]+\.[0-9]+ ${symbol}")
+    [ "" == "${vpay}" ] && vpay="0 ${symbol}"
+    [ "" == "${bpay}" ] && bpay="0 ${symbol}"
     claim_success
 }
 

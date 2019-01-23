@@ -75,7 +75,7 @@ def get_account_info():
 
 def get_issue_token():
     global pervote_bucket, perblock_bucket
-    response = eos_api.get_currency_stats(url=url)
+    response = eos_api.get_currency_stats(url=url, symbol=Config.get_symbol())
     supply = float(response['supply'][:-4])
     usecs_since_last_fill = ct - last_pervote_bucket_fill
     new_tokens = continuous_rate * supply * usecs_since_last_fill / useconds_per_year

@@ -111,3 +111,14 @@ def get_actions(account, pos=-1, offset=-50, url=def_api, timeout=def_timeout):
     }
     """ % (account, pos, offset)
     return http.post('get_actions', url=url, data=data, timeout=timeout).json()['actions']
+
+
+def get_block(block_num_or_id, url=def_api, timeout=def_timeout):
+    uri = "/v1/chain/get_block"
+    url = url + uri
+    data = """
+    {
+        "block_num_or_id": "%s"
+    }
+    """ % (block_num_or_id)
+    return http.post('get_block', url=url, data=data, timeout=timeout).json()

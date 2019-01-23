@@ -57,6 +57,10 @@ class Config:
     def get_backup_days():
         return cf.getint(Config.section, "log_backup_days")
 
+    @staticmethod
+    def get_symbol():
+        return cf.get(Config.section, "symbol")
+
 
 class MetricConfig:
     section = "metrics"
